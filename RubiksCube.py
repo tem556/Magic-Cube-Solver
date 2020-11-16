@@ -44,8 +44,8 @@ class RubiksCube:
 	def rotatePrime (self, side):
 		oldSide = side[:]
 		side [0], side[1], side[2] = oldSide[2], oldSide[5], oldSide[8]
-		side[5], side[8] = oldSide[7], oldSide[6]
-		side[3], side[6], side[7] = oldSide[1], oldSide[0], oldSide[3]
+		side[3], side[5], side[6] = oldSide[1], oldSide[7], oldSide[0]
+		side[7], side[8] = oldSide[3], oldSide[6]
 
 	# Moves the right side of the cube anti-clockwise (R')
 	def moveR (self):
@@ -243,9 +243,9 @@ class RubiksCube:
 		self.gSide[7] = self.oSide[3]
 		self.gSide[8] = self.oSide[6]
 
-		self.oSide[0] = self.bSide[0]
+		self.oSide[0] = self.bSide[2]
 		self.oSide[3] = self.bSide[1]
-		self.oSide[6] = self.bSide[2]
+		self.oSide[6] = self.bSide[0]
 
 		self.bSide[0] = self.rSide[2]
 		self.bSide[1] = self.rSide[5]
@@ -258,50 +258,74 @@ class RubiksCube:
 		self.rotatePrime(wSide)
 
 	def moveF (self):
+		greenSix = self.gSide[6]
+		greenSeven = self.gSide[7]
+		greenEight = self.gSide[8]
+
+		self.gSide[6] = self.rSide[8]
+		self.gSide[7] = self.rSide[5]
+		self.gSide[8] = self.rSide[2]
+
+		self.rSide[2] = self.bSide[0]
+		self.rSide[5] = self.bSide[1]
+		self.rSide[8] = self.bSide[2]
+
+		self.bSide[0] = self.oSide[6]
+		self.bSide[1] = self.oSide[3]
+		self.bSide[2] = self.oSide[0]
+
+		self.oSide[0] = greenSix
+		self.oSide[3] = greenSeven
+		self.oSide[6] = greenEight
+
 		self.rotate(wSide)
 
-		greenTwo = self.gSide[2]
-		greenFive = self.gSide[5]
-		greenEight = self.gSide[8]
-
-		self.gSide[6] = self.rSide[6]
-		self.gSide[7] = self.rSide[7]
-		self.gSide[8] = self.rSide[8]
-
-		self.rSide[6] = self.bSide[6]
-		self.rSide[7] = self.bSide[7]
-		self.rSide[8] = self.bSide[8]
-
-		self.bSide[6] = self.oSide[6]
-		self.bSide[7] = self.oSide[7]
-		self.bSide[8] = self.oSide[8]
-
-		self.oSide[6] = greenTwo
-		self.oSide[7] = greenFive
-		self.oSide[8] = greenEight
-
 	def moveBPrime (self):
+		greenZero = self.gSide[0]
+		greenOne = self.gSide[1]
+		greenTwo = self.gSide[2]
+
+		self.gSide[0] = self.rSide[6]
+		self.gSide[1] = self.rSide[3]
+		self.gSide[2] = self.rSide[0]
+
+		self.rSide[0] = self.bSide[6]
+		self.rSide[3] = self.bSide[7]
+		self.rSide[6] = self.bSide[8]
+
+		self.bSide[6] = self.oSide[8]
+		self.bSide[7] = self.oSide[5]
+		self.bSide[8] = self.oSide[2]
+
+		self.oSide[2] = greenZero
+		self.oSide[5] = greenOne
+		self.oSide[8] = greenTwo
+
+		self.rotatePrime(ySide)
+
+	def moveB (self):
+		greenZero = self.gSide[0]
+		greenOne = self.gSide[1]
+		greenTwo = self.gSide[2]
+
+		self.gSide[0] = self.oSide[2]
+		self.gSide[1] = self.oSide[5]
+		self.gSide[2] = self.oSide[8]
+
+		self.oSide[2] = self.bSide[8]
+		self.oSide[5] = self.bSide[7]
+		self.oSide[8] = self.bSide[6]
+
+		self.bSide[6] = self.rSide[0]
+		self.bSide[7] = self.rSide[3]
+		self.bSide[8] = self.rSide[6]
+
+		self.rSide[0] =greenTwo
+		self.rSide[3] = greenOne
+		self.rSide[6] = greenZero
+
 		self.rotate(ySide)
 
-		greenTwo = self.gSide[2]
-		greenFive = self.gSide[5]
-		greenEight = self.gSide[8]
-
-		self.gSide[2] = self.rSide[2]
-		self.gSide[5] = self.rSide[5]
-		self.gSide[8] = self.rSide[8]
-
-		self.rSide[2] = self.bSide[2]
-		self.rSide[5] = self.bSide[5]
-		self.rSide[8] = self.bSide[8]
-
-		self.bSide[2] = self.oSide[2]
-		self.bSide[5] = self.oSide[5]
-		self.bSide[8] = self.oSide[8]
-
-		self.oSide[2] = greenTwo
-		self.oSide[5] = greenFive
-		self.oSide[8] = greenEight
 
 
 
@@ -313,23 +337,15 @@ class RubiksCube:
 
 
 cube = RubiksCube(wSide,ySide, bSide, gSide, rSide, oSide)
-# cube.moveU()
-cube.moveR()
-# cube.moveLPrime()
-# cube.moveD()
-# cube.moveUPrime()
-# cube.moveRPrime()
-# cube.moveL()
-# cube.moveDPrime()
-# cube.moveD()
-# cube.moveLPrime()
-# cube.moveR()
-# cube.moveU()
-# cube.moveDPrime()
-# cube.moveL()
-# cube.moveRPrime()
-# cube.moveUPrime()
-cube.getCube(bSide)
+cube.moveU()
+cube.moveLPrime()
+cube.moveB()
+cube.moveD()
+cube.moveUPrime()
+cube.moveRPrime()
+cube.moveBPrime()
+cube.moveUPrime()
+cube.getCube(rSide)
 
 
 		
