@@ -35,6 +35,8 @@ class RubiksCube:
 		       wSide[6]+" "+wSide[7]+" "+wSide[8]+"\n")
 
 	# Rotates a side's color clockwise
+	# Used when a move is made to a certain side
+	# That side's color also rotate
 	def rotate (self, side):
 		oldSide = side[:]
 		side[0], side[1], side[2] = oldSide[6], oldSide[3], oldSide[0]
@@ -47,8 +49,9 @@ class RubiksCube:
 		side[3], side[5], side[6] = oldSide[1], oldSide[7], oldSide[0]
 		side[7], side[8] = oldSide[3], oldSide[6]
 
-	# Moves the right side of the cube anti-clockwise (R')
+	# Moves the right side of the cube clockwise (R)
 	def moveR (self):
+		# Saves this side's color temporarily
 		whiteTwo = self.wSide[2]
 		whiteFive = self.wSide[5]
 		whiteEight = self.wSide[8]
@@ -326,7 +329,24 @@ class RubiksCube:
 
 		self.rotate(ySide)
 
-
+	# Takes a list with required moves and performs them
+	# using the functions above. Note: Recursive function
+	def move(self, list):
+		# Base case: when the list is empty
+		if list==[]:return True
+		elif list[0]=="R":self.moveR()
+		elif list[0]=="R'":self.moveRPrime()
+		elif list[0]=="L":self.moveL()
+		elif list[0]=="L'":self.moveLPrime()
+		elif list[0]=="U":self.moveU()
+		elif list[0]=="U'":self.moveUPrime()
+		elif list[0]=="D":self.moveD()
+		elif list[0]=="D'":self.moveDPrime()
+		elif list[0]=="F":self.moveF()
+		elif list[0]=="F'":self.moveFPrime()
+		elif list[0]=="B": self.moveB()
+		elif list[0]=="B'":self.moveBPrime()
+		self.move(list[1:])
 
 
 
@@ -337,14 +357,7 @@ class RubiksCube:
 
 
 cube = RubiksCube(wSide,ySide, bSide, gSide, rSide, oSide)
-cube.moveU()
-cube.moveLPrime()
-cube.moveB()
-cube.moveD()
-cube.moveUPrime()
-cube.moveRPrime()
-cube.moveBPrime()
-cube.moveUPrime()
+cube.move(["R","U", "B", "U", "R'", "L'" ])
 cube.getCube(rSide)
 
 
