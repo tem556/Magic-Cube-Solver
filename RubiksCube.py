@@ -28,11 +28,31 @@ class RubiksCube:
 		self.bSide, self.gSide = bSide, gSide
 		self.rSide, self.oSide = rSide, oSide
 
-	def getCube(self, side):
-		wSide = side
-		print (wSide[0]+" "+wSide[1]+" "+wSide[2]+"\n"+
-		       wSide[3]+" "+wSide[4]+" "+wSide[5]+"\n"+
-		       wSide[6]+" "+wSide[7]+" "+wSide[8]+"\n")
+
+	def getSide(self, side):
+		cSide = side
+		return (cSide[0]+" "+cSide[1]+" "+cSide[2]+"\n"+
+		       cSide[3]+" "+cSide[4]+" "+cSide[5]+"\n"+
+		       cSide[6]+" "+cSide[7]+" "+cSide[8]+"\n")
+
+	# Prints the sides, has white as the middle
+	def printCube(self):
+		w,y = self.getSide(wSide),self.getSide(ySide)
+		r,o = self.getSide(rSide), self.getSide(oSide)
+		g,b = self.getSide(gSide), self.getSide(bSide)
+		# This will print the blank lines
+		print (" "*5+"|"+gSide[0]+" "+gSide[1]+" "+gSide[2]+"\n"+
+		       " "*5+"|"+gSide[3]+" "+gSide[4]+" "+gSide[5]+"\n"+
+		       " "*5+"|"+gSide[6]+" "+gSide[7]+" "+gSide[8]+"\n"+
+		       r[:5]+"|"+w[:5]+"|"+o[:5]+"|"+y[:5]+"|"+"\n"+
+		       r[6:11]+"|"+w[6:11]+"|"+o[6:11]+"|"+y[6:11]+"|"+"\n"+
+		       r[12:17]+"|"+w[12:17]+"|"+o[12:17]+"|"+y[12:17]+"|"+"\n"+
+		       " "*5+"|"+bSide[0]+" "+bSide[1]+" "+bSide[2]+"\n"+
+		       " "*5+"|"+bSide[3]+" "+bSide[4]+" "+bSide[5]+"\n"+
+		       " "*5+"|"+bSide[6]+" "+bSide[7]+" "+bSide[8]+"\n")
+		       
+		       
+
 
 	# Rotates a side's color clockwise
 	# Used when a move is made to a certain side
@@ -357,8 +377,8 @@ class RubiksCube:
 
 
 cube = RubiksCube(wSide,ySide, bSide, gSide, rSide, oSide)
-cube.move(["R","U", "B", "U", "R'", "L'" ])
-cube.getCube(rSide)
+cube.move(["R"])
+cube.printCube()
 
 
 		
