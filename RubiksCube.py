@@ -22,7 +22,7 @@ oSide = [o, o, o,
          o, o, o,
          o, o, o]
 
-class RubiksCube:
+class RubikCube:
 	def __init__(self, wSide, ySide, bSide, gSide, rSide, oSide):
 		self.wSide, self.ySide = wSide, ySide
 		self.bSide, self.gSide = bSide, gSide
@@ -37,19 +37,19 @@ class RubiksCube:
 
 	# Prints the sides, has white as the middle
 	def printCube(self):
-		w,y = self.getSide(wSide),self.getSide(ySide)
+		g,b = self.getSide(gSide),self.getSide(bSide)
 		r,o = self.getSide(rSide), self.getSide(oSide)
-		g,b = self.getSide(gSide), self.getSide(bSide)
+		y,w = self.getSide(ySide), self.getSide(wSide)
 		# This will print the blank lines
-		print (" "*5+"|"+gSide[0]+" "+gSide[1]+" "+gSide[2]+"\n"+
-		       " "*5+"|"+gSide[3]+" "+gSide[4]+" "+gSide[5]+"\n"+
-		       " "*5+"|"+gSide[6]+" "+gSide[7]+" "+gSide[8]+"\n"+
-		       r[:5]+"|"+w[:5]+"|"+o[:5]+"|"+y[:5]+"|"+"\n"+
-		       r[6:11]+"|"+w[6:11]+"|"+o[6:11]+"|"+y[6:11]+"|"+"\n"+
-		       r[12:17]+"|"+w[12:17]+"|"+o[12:17]+"|"+y[12:17]+"|"+"\n"+
-		       " "*5+"|"+bSide[0]+" "+bSide[1]+" "+bSide[2]+"\n"+
-		       " "*5+"|"+bSide[3]+" "+bSide[4]+" "+bSide[5]+"\n"+
-		       " "*5+"|"+bSide[6]+" "+bSide[7]+" "+bSide[8]+"\n")
+		print (" "*5+"|"+ySide[0]+" "+ySide[1]+" "+ySide[2]+"\n"+
+		       " "*5+"|"+ySide[3]+" "+ySide[4]+" "+ySide[5]+"\n"+
+		       " "*5+"|"+ySide[6]+" "+ySide[7]+" "+ySide[8]+"\n"+
+		       r[:5]+"|"+g[:5]+"|"+o[:5]+"|"+b[:5]+"|"+"\n"+
+		       r[6:11]+"|"+g[6:11]+"|"+o[6:11]+"|"+b[6:11]+"|"+"\n"+
+		       r[12:17]+"|"+g[12:17]+"|"+o[12:17]+"|"+b[12:17]+"|"+"\n"+
+		       " "*5+"|"+wSide[0]+" "+wSide[1]+" "+wSide[2]+"\n"+
+		       " "*5+"|"+wSide[3]+" "+wSide[4]+" "+wSide[5]+"\n"+
+		       " "*5+"|"+wSide[6]+" "+wSide[7]+" "+wSide[8]+"\n")
 		       
 		       
 
@@ -63,6 +63,7 @@ class RubiksCube:
 		side[3], side[5], side[6] = oldSide[7], oldSide[1], oldSide[8]
 		side[7], side[8] = oldSide[5], oldSide[2]
 
+	# Rotates a side's color anti-clockwise
 	def rotatePrime (self, side):
 		oldSide = side[:]
 		side [0], side[1], side[2] = oldSide[2], oldSide[5], oldSide[8]
@@ -75,6 +76,7 @@ class RubiksCube:
 		whiteTwo = self.wSide[2]
 		whiteFive = self.wSide[5]
 		whiteEight = self.wSide[8]
+		# "Shifts" each color to its desired position
 
 		self.wSide[2] = self.bSide[2]
 		self.wSide[5] = self.bSide[5]
@@ -94,7 +96,7 @@ class RubiksCube:
 
 		self.rotate(oSide)
 
-	# Moves the right side of the cube clockwise (R)
+	# Moves the right side of the cube anti-clockwise (R')
 	def moveRPrime (self):
 		whiteTwo = self.wSide[2]
 		whiteFive = self.wSide[5]
@@ -117,7 +119,8 @@ class RubiksCube:
 		self.bSide[8] = whiteEight
 
 		self.rotatePrime(oSide)
-		
+
+	# Moves the left side of the cube clockwise
 	def moveL (self):
 		whiteZero = self.wSide[0]
 		whiteThree = self.wSide[3]
@@ -140,7 +143,8 @@ class RubiksCube:
 		self.bSide[6] = whiteSix
 
 		self.rotate(rSide)
-		
+
+	# Moves the left side of the cube anti-clockwise
 	def moveLPrime(self):
 		whiteTwo = self.wSide[0]
 		whiteFive = self.wSide[3]
@@ -164,7 +168,7 @@ class RubiksCube:
 
 		self.rotatePrime(rSide)
 		
-
+	# Moves the upper side of the cube anti-clockwise(<--from that side's perspective)
 	def moveUPrime (self):
 		whiteZero = self.wSide[0]
 		whiteOne = self.wSide[1]
@@ -187,6 +191,8 @@ class RubiksCube:
 		self.oSide[2] = whiteTwo
 
 		self.rotatePrime(gSide)
+
+	# Moves the upper side clockwise
 	def moveU(self):
 		whiteZero = self.wSide[0]
 		whiteOne = self.wSide[1]
@@ -210,6 +216,7 @@ class RubiksCube:
 
 		self.rotate(gSide)
 
+	# Moves the down side(bottom row) anti-clockwise
 	def moveDPrime (self):
 		whiteSix = self.wSide[6]
 		whiteSeven = self.wSide[7]
@@ -233,6 +240,7 @@ class RubiksCube:
 
 		self.rotatePrime(bSide)
 
+	# Moves the down side of the cube clockwise
 	def moveD (self):
 		whiteSix = self.wSide[6]
 		whiteSeven = self.wSide[7]
@@ -256,8 +264,8 @@ class RubiksCube:
 
 		self.rotate(bSide)
 
+	# Moves the front side of the cube anti-clockwise
 	def moveFPrime (self):
-
 		greenSix = self.gSide[6]
 		greenSeven = self.gSide[7]
 		greenEight = self.gSide[8]
@@ -280,6 +288,7 @@ class RubiksCube:
 
 		self.rotatePrime(wSide)
 
+	# Moves the front side of the cube clockwise
 	def moveF (self):
 		greenSix = self.gSide[6]
 		greenSeven = self.gSide[7]
@@ -303,6 +312,8 @@ class RubiksCube:
 
 		self.rotate(wSide)
 
+	# Moves the back side of the cube anti-clockwise
+	# Keep in mind that the indices for the back side are flipped
 	def moveBPrime (self):
 		greenZero = self.gSide[0]
 		greenOne = self.gSide[1]
@@ -326,6 +337,7 @@ class RubiksCube:
 
 		self.rotatePrime(ySide)
 
+	# Moves the back side of the cube clockwise
 	def moveB (self):
 		greenZero = self.gSide[0]
 		greenOne = self.gSide[1]
@@ -350,7 +362,8 @@ class RubiksCube:
 		self.rotate(ySide)
 
 	# Takes a list with required moves and performs them
-	# using the functions above. Note: Recursive function
+	# using the functions above.
+
 	def move(self, list):
 		# Base case: when the list is empty
 		if list==[]:return True
@@ -366,18 +379,26 @@ class RubiksCube:
 		elif list[0]=="F'":self.moveFPrime()
 		elif list[0]=="B": self.moveB()
 		elif list[0]=="B'":self.moveBPrime()
+		# If a wrong move (not recognizable character) is inputted :
+		else: print ("Invalid move")
 		self.move(list[1:])
 
 
 
 
 
-
-
-
-
-cube = RubiksCube(wSide,ySide, bSide, gSide, rSide, oSide)
-cube.move(["R"])
+# This list takes the user commands in a list
+# Possible commands are:
+# R and R' : moves the right side clockwise, prime moves it anti-clockwise
+# L and L' : moves the left side...
+# U and U' : moves the upper column...
+# D and D' : moves the bottom column(down)...
+# F and F' : moves the front side...
+# B and B' : moves the back side...
+# Example:
+cube = RubikCube(wSide, ySide, bSide, gSide, rSide, oSide)
+# cube.move(["R","F", "U","U'","F'","R'"])
+# # Print all six sides of the cube
 cube.printCube()
 
 
