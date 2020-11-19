@@ -23,7 +23,16 @@ oSide = [o, o, o,
 
 class Solver:
 	def __init__(self, wSide, ySide, bSide, gSide, rSide, oSide ):
-		cube = RubikCube(wSide, ySide, bSide, gSide, rSide, oSide)
+		self.cube = RubikCube(wSide, ySide, bSide, gSide, rSide, oSide)
 
-	def printCube(self):
-		cube.printCube()
+
+
+	def doStuff(self):
+		self.cube.move(["R"])
+		self.cube.printCube()
+
+
+
+solution = Solver(wSide, ySide, bSide, gSide, rSide, oSide)
+solution.doStuff()
+
