@@ -113,77 +113,83 @@ class SolveCross(RubikCube):
 	# Has the solution if the white green cubicle for cross
 	# is in the yellow side, gets the solution by extending solution list
 	# And then executes them to see the next course of action
-	def whiteY(self):
+	def whiteY(self, wSide, ySide, frontSide, backSide, rightSide, leftSide):
 		sol = []
-		if wSide[1]=="w" and gSide[7]=="g":
+		if wSide[1]=="w" and frontSide[7]=="g":
 			sol.extend([])
-		elif ySide[7]=="w" and gSide[1]=="g":
+		elif ySide[7]=="w" and frontSide[1]=="g":
 			sol.extend(["F", "F"])
-		elif ySide[7]=="g" and gSide[1]=="w":
+		elif ySide[7]=="g" and frontSide[1]=="w":
 			sol.extend(["U'", "R'", "F", "R"])
-		elif ySide[5]=="w" and oSide[1]=="g":
+		elif ySide[5]=="w" and rightSide[1]=="g":
 			sol.extend(["U", "F", "F"])
-		elif ySide[5] == "g" and oSide[1] == "w":
+		elif ySide[5] == "g" and rightSide[1] == "w":
 			sol.extend(["R'", "F", "R"])
-		elif ySide[3]=="w" and rSide[1]=="g":
+		elif ySide[3]=="w" and leftSide[1]=="g":
 			sol.extend(["U'", "F", "F"])
-		elif ySide[3]=="g" and rSide[1]=="w":
+		elif ySide[3]=="g" and leftSide[1]=="w":
 			sol.extend(["L", "F'", "L'"])
-		elif ySide[1]=="w" and bSide[1]=="g":
+		elif ySide[1]=="w" and backSide[1]=="g":
 			sol.extend(["U", "U", "F", "F"])
-		elif ySide[1]=="g" and bSide[1]=="w":
+		elif ySide[1]=="g" and backSide[1]=="w":
 			sol.extend(["U", "R'", "F", "R"])
 		return sol
 	# Same as above, just for the white side
-	def whiteW(self):
+	def whiteW(self, wSide,frontSide, backSide, rightSide, leftSide):
 		sol = []
-		if wSide[1]=="w" and gSide[7]=="g":
+		if wSide[1]=="w" and frontSide[7]=="g":
 			sol.extend([])
-		elif wSide[3]=="w" and rSide[7]=="g":
+		elif wSide[3]=="w" and leftSide[7]=="g":
 			sol.extend(["L", "L", "U'", "F", "F"])
-		elif wSide[5]=="w" and oSide[7]=="g":
+		elif wSide[5]=="w" and rightSide[7]=="g":
 			sol.extend(["R", "R", "U", "F", "F"])
-		elif wSide[7]=="w" and bSide[7]=="g":
+		elif wSide[7]=="w" and backSide[7]=="g":
 			sol.extend(["B", "B", "U", "U", "F", "F"])
-		elif wSide[1]=="g" and gSide[7]=="w":
-			sol.extend(["F'", "D", "R'", "D'"])
-		elif wSide[3]=="g" and rSide[7]=="w":
+		elif wSide[1]=="g" and frontSide[7]=="w":
+			sol.extend(["F'", "D'", "L", "D"])
+		elif wSide[3]=="g" and leftSide[7]=="w":
 			sol.extend(["L'", "F'"])
-		elif wSide[5]=="g" and oSide[7]=="w":
+		elif wSide[5]=="g" and rightSide[7]=="w":
 			sol.extend(["R", "F"])
-		elif wSide[7]=="g" and bSide[7]=="w":
+		elif wSide[7]=="g" and backSide[7]=="w":
 			sol.extend(["B","R'","U", "R", "F", "F"])
 		return sol
 	# Same as above, but for rest of sides
-	def white(self):
+	def white(self, wSide,frontSide, backSide, rightSide, leftSide):
 		sol = []
-		if wSide[1] == "w" and gSide[7] == "g":
+		if wSide[1] == "w" and frontSide[7] == "g":
 			sol.extend([])
-		elif gSide[5]=="g" and oSide[3]=="w":
+		elif frontSide[5]=="g" and rightSide[3]=="w":
 			sol.extend(["F"])
-		elif   gSide[3]=="g" and rSide[5] =="w":
+		elif   frontSide[3]=="g" and leftSide[5] =="w":
 			sol.extend(["F'"])
-		elif bSide[3]=="w" and oSide[5]=="g":
+		elif backSide[3]=="w" and rightSide[5]=="g":
 			sol.extend(["D", "R", "D'"])
-		elif bSide[5]=="w" and rSide[3]=="g":
+		elif backSide[5]=="w" and leftSide[3]=="g":
 			sol.extend(["D'", "L'", "D"])
-		elif gSide[5]=="w" and oSide[3]=="g":
+		elif frontSide[5]=="w" and rightSide[3]=="g":
 			sol.extend(["D", "R'", "D'"])
-		elif gSide[3]=="w" and rSide[5]=="g":
+		elif frontSide[3]=="w" and leftSide[5]=="g":
 			sol.extend(["D'", "L", "D"])
-		elif bSide[5]=="g" and rSide[3]=="w":
+		elif backSide[5]=="g" and leftSide[3]=="w":
 			sol.extend(["D", "D", "B", "D", "D"])
-		elif bSide[3]=="g" and oSide[5]=="w":
+		elif backSide[3]=="g" and rightSide[5]=="w":
 			sol.extend(["D", "D", "B'", "D", "D"])
 		return sol
 
+	def greenCubicle(self):
+		x = self.whiteY(wSide, ySide, gSide, bSide, oSide, rSide)
+		y = self.whiteW(wSide, gSide, bSide, oSide, rSide)
+		z = self.white(wSide, gSide, bSide, oSide, rSide)
+		for i in [x,y,z]:
+			self.solution.extend(i)
+			self.move(i)
 
 
 
 
 cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
 cross.move(["R", "F", "U", "L", "D"])
-cross.greenWhitey()
-cross.greenWhitew()
+cross.greenCubicle()
 print (cross.getSolution())
 cross.printCube()
