@@ -27,6 +27,8 @@ class RubikCube:
 		self.gSide, self.bSide = gSide, bSide
 		self.wSide, self.ySide = wSide, ySide
 		self.rSide, self.oSide = rSide, oSide
+		# Will be useful in subclass
+		self.solution = []
 
 	def getSide(self, side):
 		cSide = side
