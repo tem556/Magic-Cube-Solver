@@ -21,6 +21,63 @@ oSide = [o, o, o,
          o, o, o,
          o, o, o]
 
+# Helper functions, used for solving the cube
+# Function that translates the instructions for solving cube
+# in case the cube is rotated left, Used for reusing solve green
+# white cross function for other sides as well (for red side)
+def translateLeft(list):
+	if list == []:
+		return []
+	if list[0]=="F": return ["L"] + translateLeft(list[1:])
+	if list[0]=="F'": return ["L'"] + translateLeft(list[1:])
+	if list[0]=="R": return ["F"] + translateLeft(list[1:])
+	if list[0]=="R'": return ["F'"] + translateLeft(list[1:])
+	if list[0]=="L": return ["B"] + translateLeft(list[1:])
+	if list[0]=="L'": return ["B'"] + translateLeft(list[1:])
+	if list[0]=="B": return  ["R"] + translateLeft(list[1:])
+	if list[0]=="B'": return ["R'"] + translateLeft(list[1:])
+	if list[0]=="D" or list[0]=="D'":
+		return [list[0]] + translateLeft(list[1:])
+	if list[0]=="U" or list[0]=="U'":
+		return[list[0]] + translateLeft(list[1:])
+
+
+# Same as above, only if rotated right (orange side)
+def translateRight(list):
+	if list == []:
+		return []
+	if list[0]=="F": return ["R"] + translateRight(list[1:])
+	if list[0]=="F'": return ["R'"] + translateRight(list[1:])
+	if list[0]=="R": return ["B"] + translateRight(list[1:])
+	if list[0]=="R'": return ["B'"] + translateRight(list[1:])
+	if list[0]=="L": return ["F"] + translateRight(list[1:])
+	if list[0]=="L'": return ["F'"] + translateRight(list[1:])
+	if list[0]=="B": return  ["L"] + translateRight(list[1:])
+	if list[0]=="B'": return ["L'"] + translateRight(list[1:])
+	if list[0] == "D" or list[0] == "D'":
+		return [list[0]] + translateRight(list[1:])
+	if list[0] == "U" or list[0] == "U'":
+		return [list[0]] + translateRight(list[1:])
+
+# Used if the cube is rotated 180 degrees, (blue side)
+def translateBack(list):
+	if list == []:
+		return []
+	if list[0]=="F": return ["B"] + translateBack(list[1:])
+	if list[0]=="F'": return ["B'"] + translateBack(list[1:])
+	if list[0]=="R": return ["L"] + translateBack(list[1:])
+	if list[0]=="R'": return ["L'"] + translateBack(list[1:])
+	if list[0]=="L": return ["R"] + translateBack(list[1:])
+	if list[0]=="L'": return ["R'"] + translateBack(list[1:])
+	if list[0]=="B": return  ["F"] + translateBack(list[1:])
+	if list[0]=="B'": return ["F'"] + translateBack(list[1:])
+	if list[0] == "D" or list[0] == "D'":
+		return [list[0]] + translateBack(list[1:])
+	if list[0] == "U" or list[0] == "U'":
+		return [list[0]] + translateBack(list[1:])
+
+
+# This class solves the cross for any cube permutation
 class SolveCross(RubikCube):
 	# Function that shortens the solution, As the AI isn't always smart
 	# it can include longer moves for doing the same task, this function
@@ -52,64 +109,6 @@ class SolveCross(RubikCube):
 			sol.remove("X")
 		return sol
 
-	# Function that translates the instructions for solving cube
-	# in case the cube is rotated left, Used for reusing solve green
-	# white cross function for other sides as well (for red side)
-	def translateLeft(self, list):
-		if list == []:
-			return []
-		if list[0]=="F": return ["L"] + self.translateLeft(list[1:])
-		if list[0]=="F'": return ["L'"] + self.translateLeft(list[1:])
-		if list[0]=="R": return ["F"] + self.translateLeft(list[1:])
-		if list[0]=="R'": return ["F'"] + self.translateLeft(list[1:])
-		if list[0]=="L": return ["B"] + self.translateLeft(list[1:])
-		if list[0]=="L'": return ["B'"] + self.translateLeft(list[1:])
-		if list[0]=="B": return  ["R"] + self.translateLeft(list[1:])
-		if list[0]=="B'": return ["R'"] + self.translateLeft(list[1:])
-		if list[0]=="D" or list[0]=="D'":
-			return [list[0]]+ self.translateLeft(list[1:])
-		if list[0]=="U" or list[0]=="U'":
-			return[list[0]]+self.translateLeft(list[1:])
-
-
-	# Same as above, only if rotated right (orange side)
-	def translateRight(self, list):
-		if list == []:
-			return []
-		if list[0]=="F": return ["R"] + self.translateRight(list[1:])
-		if list[0]=="F'": return ["R'"]+ self.translateRight(list[1:])
-		if list[0]=="R": return ["B"]+ self.translateRight(list[1:])
-		if list[0]=="R'": return ["B'"]+ self.translateRight(list[1:])
-		if list[0]=="L": return ["F"]+ self.translateRight(list[1:])
-		if list[0]=="L'": return ["F'"]+ self.translateRight(list[1:])
-		if list[0]=="B": return  ["L"]+ self.translateRight(list[1:])
-		if list[0]=="B'": return ["L'"]+ self.translateRight(list[1:])
-		if list[0] == "D" or list[0] == "D'":
-			return [list[0]] + self.translateRight(list[1:])
-		if list[0] == "U" or list[0] == "U'":
-			return [list[0]] + self.translateRight(list[1:])
-
-	# Used if the cube is rotated 180 degrees, (blue side)
-	def translateBack(self, list):
-		if list == []:
-			return []
-		if list[0]=="F": return ["B"] + self.translateBack(list[1:])
-		if list[0]=="F'": return ["B'"]+ self.translateBack(list[1:])
-		if list[0]=="R": return ["L"]+ self.translateBack(list[1:])
-		if list[0]=="R'": return ["L'"]+ self.translateBack(list[1:])
-		if list[0]=="L": return ["R"]+ self.translateBack(list[1:])
-		if list[0]=="L'": return ["R'"]+ self.translateBack(list[1:])
-		if list[0]=="B": return  ["F"]+ self.translateBack(list[1:])
-		if list[0]=="B'": return ["F'"]+ self.translateBack(list[1:])
-		if list[0] == "D" or list[0] == "D'":
-			return [list[0]] + self.translateBack(list[1:])
-		if list[0] == "U" or list[0] == "U'":
-			return [list[0]] + self.translateBack(list[1:])
-
-
-
-
-
 	# Has the solution if the white green cubicle for cross
 	# is in the yellow side, gets the solution by extending solution list
 	# And then executes them to see the next course of action
@@ -125,7 +124,7 @@ class SolveCross(RubikCube):
 			sol.extend(["U", "F", "F"])
 		elif ySide[5] == color and rightSide[1] == "w":
 			sol.extend(["R'", "F", "R"])
-		elif ySide[3]=="w" and leftSide[1]==color:#################
+		elif ySide[3]=="w" and leftSide[1]==color:
 			sol.extend(["U'", "F", "F"])
 		elif ySide[3]==color and leftSide[1]=="w":
 			sol.extend(["L", "F'", "L'"])
@@ -177,6 +176,9 @@ class SolveCross(RubikCube):
 			sol.extend(["D", "D", "B'", "D", "D"])
 		return sol
 
+
+	#Uses the above function to put green cubicle in correct place
+	#The function was written originally for green so requires minimal changes
 	def greenCubicle(self):
 		w, y, g, b = self.wSide , self.ySide , self.gSide, self.bSide
 		r, o = self.rSide, self.oSide
@@ -188,20 +190,32 @@ class SolveCross(RubikCube):
 				self.solution.extend(i)
 				self.move(i)
 
+	# Uses the solve cross functions, only difference is, the functions
+	# were written assuming green as the front-side, makes use of that
+	# by "rotating" the cube and making red the front side
+	# That way, the logic for the green side still holds
 	def redCubicle(self):
 		w, y, g, b = self.wSide[:], self.ySide[:], self.gSide, self.bSide
 		r, o = self.rSide, self.oSide
+		# Rotates the white and yellow side as rotating the cube
+		# mixes up the indices for those lists otherwise
 		self.rotate(w)
 		self.rotatePrime(y)
+		# Gives red side as the front side for solving
 		x = self.whiteY(w, y, r, o, g, b, "r" )
 		y = self.whiteW(w, r, o, g, b, "r" )
 		z = self.white(w, r, o, g, b, "r" )
+		# After checking in all positions, executes the one
+		# which holds the solution for current position
 		for i in [x,y,z]:
 			if i != []:
-				translation = self.translateLeft(i)
+				# Translates the moves for a left rotated cube
+				# into what it would look like with the green side as front
+				translation = translateLeft(i)
 				self.solution.extend(translation)
 				self.move(translation)
 
+	# Same logic as red side, only applied for orange side
 	def orangeCubicle(self):
 		w, y, g, b = self.wSide[:], self.ySide[:], self.gSide, self.bSide
 		r, o = self.rSide, self.oSide
@@ -212,10 +226,11 @@ class SolveCross(RubikCube):
 		z = self.white(w, o, r, b, g, "o")
 		for i in [x,y,z]:
 			if i != []:
-				translation = self.translateRight(i)
+				translation = translateRight(i)
 				self.solution.extend(translation)
 				self.move(translation)
 
+	# Same logic as red side, only applied for blue side
 	def blueCubicle(self):
 		w, y, g, b = self.wSide[:], self.ySide[:], self.gSide, self.bSide
 		r, o = self.rSide, self.oSide
@@ -226,7 +241,216 @@ class SolveCross(RubikCube):
 		z = self.white(w, b, g, r, o, "b")
 		for i in [x,y,z]:
 			if i != []:
-				translation = self.translateBack(i)
+				translation = translateBack(i)
+				self.solution.extend(translation)
+				self.move(translation)
+
+	def getSides(self):
+		return (wSide, ySide, gSide, bSide, oSide, rSide)
+
+cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
+cross.move(["U'", "R", "R", "B", "B", "D", "U", "L", "R", "D'"])
+cross.redCubicle()
+cross.greenCubicle()
+cross.orangeCubicle()
+cross.blueCubicle()
+
+# z = cross.getSides()
+# cross.printCube()
+
+# Solves first two layers of the cube after having the cross done
+# whiteSide, yellowSide, frontSide, backSide, rightSide, leftSide
+class SolveFirstTwoLayers(RubikCube):
+
+	def getSolution (self):
+		sol = self.solution
+		# Is used if the same move appears three consecutive time
+		# Turns them into one move with opposite direction
+		for i in range(2, len(sol)):
+			if sol[i]==sol[i-1] and sol[i-1]==sol[i-2]:
+				sol[i] = "X"
+				sol[i-1] = "X"
+				if "'" in sol[i]:
+					sol[i-2] = sol[i-2][:1]
+				else:
+					sol[i-2] = sol[i-2] + "'"
+		# Is used when the same move appears four times, deletes them
+		for i in range (3, len(sol)):
+			if sol[i]==sol[i-1] and sol[i-1]==sol[i-2] and sol[i-2]==sol[i-3]:
+				sol[i], sol[i-1], sol[i-2], sol[i-3] = "X", "X", "X", "X"
+
+		# Is used when a move and their opposite direction move appear
+		# consecutively, deletes them
+		for i in range(1, len(sol)):
+			if sol[i]==sol[i-1]+"'" or sol[i-1]==sol[i]+"'":
+				sol[i], sol[i-1] = "X", "X"
+		# "Deleted" moves were converted into X's before, now will be deleted
+		while "X" in sol:
+			sol.remove("X")
+		return sol
+
+
+	def easyCases(self, w, y, f, b, r, l):
+		sol = []
+		# Saves the colors for the front side and the right side
+		# Are the colors we are looking for.
+		fC, rC = f[4], r[4]
+		if f[2]==fC and r[0]=="w" and y[8]==rC and y[1]==fC and b[1]==rC:
+			sol.extend(["R", "U", "R'"])
+		elif f[2]=="w" and r[0]==rC and y[8]==fC and y[3]==rC and l[1]==fC:
+			sol.extend(["F'", "U'", "F"])
+		elif f[2]==fC and r[0]=="w" and y[8]==rC and y[7]==rC and f[1]==fC:
+			sol.extend(["U'", "F'", "U", "F"])
+		elif f[2]=="w" and r[0]==rC and y[8]==fC and y[5]==fC and r[1]==rC:
+			sol.extend(["U", "R", "U'", "R'"])
+		elif f[1]==fC and f[8]==fC and  r[6]==rC and w[2]=="w" and y[7]==rC:
+			sol.extend(["U", "R", "U'", "R'", "U'", "F'", "U", "F"])
+		elif r[1]==rC and f[8]==fC and r[6]==rC and w[2]=="w" and y[5]==fC:
+			sol.extend(["U'", "F'", "U", "F", "U", "R", "U'", "R'"])
+		elif f[1]==fC and y[7]==rC and f[8]==rC and r[6]=="w" and w[2]==fC:
+			sol.extend(["F'", "U", "F", "U'", "F'", "U", "F"])
+		elif r[1]==rC and y[5]==fC and f[8]==rC and r[6]=="w" and w[2]==fC:
+			sol.extend(["R", "U", "R'", "U'", "R", "U", "R'"])
+		return sol
+
+	def casesPartTwo(self, w, y, f, b, r, l):
+		sol = []
+		fC, rC = f[4], r[4]
+		if f[8]=="w" and r[6]==fC and w[2]==rC and y[5]==fC and r[1]==rC:
+			sol.extend(["R", "U'", "R'", "U", "R", "U'", "R'"])
+		elif f[1]==fC and y[7]==rC and f[8]=="w" and r[6]==fC and w[2]==rC:
+			sol.extend(["F'", "U'", "F", "U", "F'", "U'", "F"])
+		elif f[5]==fC and r[3]==rC and y[8]=="w" and f[2]==rC and r[0]==fC:
+			sol.extend(["R", "U", "R'", "U'", "R", "U", "R'", "U'", "R", "U", "R'"])
+		elif f[5]==rC and r[3]==fC and f[2]==rC and r[0]==fC and y[8]=="w":
+			sol.extend(["R", "U'", "R'", "U", "F'", "U", "F"])
+		elif f[5]==fC and r[3]==rC and f[2]==fC and y[8]==rC and r[0]=="w":
+			sol.extend(["U", "F'", "U", "F", "U", "F'", "U", "U", "F"])
+		elif f[5]==rC and r[3]==fC and f[2]==fC and r[0]=="w" and y[8]==rC:
+			sol.extend(["U", "F'", "U'", "F", "U'", "R", "U", "R'"])
+		elif f[5]==fC and r[3]==rC and f[2]=="w" and r[0]==rC and y[8]==fC:
+			sol.extend(["U'", "R", "U'", "R'", "U'", "R", "U", "U", "R'"])
+		elif f[5]==rC and r[3]==fC and f[2]=="w" and y[8]==fC and r[0]==rC:
+			sol.extend(["U'", "R", "U", "R'", "U", "F'", "U'", "F"])
+		elif y[5]==rC and r[1]==fC and f[2]==fC and y[8]==rC and r[0]=="w":
+			sol.extend(["R", "U'", "R'", "U", "U", "F'", "U'", "F"])
+		return sol
+
+	def casesPartThree (self, w, y, f, b, r, l):
+		fC, rC = f[4], r[4]
+		if f[1]==rC and y[7]==fC and f[2]=="w" and r[0]==rC and y[8]==fC:
+			return ["F'","U", "F", "U'", "U'", "R", "U", "R'"]
+		elif y[1]==rC and b[1]==fC and f[2]==fC and y[8]==rC and r[0]=="w":
+			return ["U", "F'", "U", "U", "F", "U", "F'", "U", "U", "F"]
+		elif f[2]=="w" and r[0]==rC and y[8]==fC and y[3]==fC and l[1]==rC:
+			return ["U'", "R", "U", "U", "R'", "U'", "R", "U", "U", "R'"]
+		elif y[3]==rC and l[1]==fC and f[2]==fC and y[8]==rC and r[0]=="w":
+			return ["U", "F'", "U'", "F", "U", "F'", "U", "U", "F"]
+		elif y[1]==fC and b[1]==rC and f[2]=="w" and r[0]==rC and y[8]==fC:
+			return ["U'", "R", "U", "R'", "U'", "R", "U", "U", "R'"]
+		elif r[1]==rC and y[5]==fC and f[2]==fC and r[0]=="w" and y[8]==rC:
+			return ["U'", "R", "U'", "R'", "U", "R", "U", "R'"]
+		elif f[1]==fC and y[7]==rC and r[0]==rC and y[8]==fC and f[2]=="w":
+			return ["U", "F'", "U", "F", "U'", "F'", "U'", "F"]
+		elif y[3]==fC and l[1]==rC and f[2]==fC and y[8]==rC and r[0]=="w":
+			return ["U'", "R", "U", "R'", "U", "R", "U", "R'"]
+		elif y[1]==rC and b[1]==fC and f[2]=="w" and y[8]==fC and r[0]==rC:
+			return ["U", "F'", "U'", "F", "U'", "F'", "U'", "F"]
+
+	def casesPartFour (self, w, y, f, b, r, l):
+		fC, rC = f[4], r[4]
+		if f[1]==rC and y[7]==fC and f[2]==fC and y[8]==rC and r[0]=="w":###
+			return  ["U", "F'", "U", "U", "F", "U'", "R", "U", "R'"]
+		elif r[1]==fC and y[5]==rC and f[2]=="w" and y[8]==fC and r[0]==rC:
+			return ["U'", "R", "U", "U", "R'", "U", "F'", "U'", "F"]
+		elif f[1]==rC and y[7]==fC and f[2]==rC and r[0]==fC and y[8]=="w":
+			return ["R", "U", "R'", "U'", "U'", "R", "U", "R'", "U'", "R", "U", "R'"]
+		elif r[1]==fC and y[5]==rC and f[2]==rC and r[0]==fC and y[8]=="w":
+			return ["F'", "U'", 'F', 'U', 'U', "F'", "U'", 'F', 'U', "F'", "U'", 'F']
+		elif y[3]==fC and l[1]==rC and f[2]==rC and r[0]==fC and y[8]=="w":
+			return ["U", "U", "R", "U", "R'", "U", "R", "U'", "R'"]
+		elif y[1]==rC and b[1]==fC and f[2]==rC and r[0]==fC and y[8]=="w":
+			return ["U", "U", "F'", "U'", "F", "U'", "F'", "U", "F"]
+		elif y[1]==fC and b[1]==rC and f[2]==rC and r[0]==fC and y[8]=="w":
+			return ["U", "R", "U", "U", "R'", "U", "R", "U'", "R'"]
+		elif y[3]==rC and l[1]==fC and f[2]==rC and r[0]==fC and y[8]=="w":
+			return ["U'", "F'", "U", "U", "F", "U'", "F'", "U", "F"]
+		elif r[1]==rC and y[5]==fC and f[2]==rC and r[0]==fC and y[8]=="w":
+			return ["R", "U", "U", "R'", "U'", "R", "U", "R'"]
+
+	def casesPartFive (self, w, y, f, b, r, l):
+		fC, rC = f[4], r[4]
+		if f[1]==fC and y[7]==rC and f[2]==rC and r[0]==fC and y[8]=="w":
+			return ["F'", "U", "U", "F", "U", "F'", "U'", "F"]
+		elif f[5]==rC and r[3]==fC and f[8]==fC and r[6]==rC and w[2]=="w":
+			return ["R", "U'", "R'", "U", "F'", 'U', 'U', 'F', 'U', "F'", 'U', 'U','F']
+		elif f[5]==fC and r[3]==rC and f[8]==rC and r[6]=="w" and w[2]==fC:
+			return ["R", "U'", "R'", "U", "R", "U", "U", "R'", "U", "R", "U'", "R'"]
+		elif f[5]==fC and r[3]==rC and f[8]=="w" and r[6]==fC and w[2]==rC:
+			return ["R", "U'", "R'", "U'", "R", "U", "R'", "U'", "R", "U", "U", "R'"]
+		elif f[5]==rC and r[3]==fC and f[8]==rC and r[6]=="w" and w[2]==fC :
+			return ["R", "U", "R'", "U'", "R", "U'", "R'", "U", "U", "F'", "U'", "F"]
+		elif f[5]==rC and r[3]==fC and f[8]=="w" and r[6]==fC and w[2]==rC:
+			return ["R", "U'", "R'", "U", "F'", "U'", "F", "U'", "F'", "U'", "F"]
+
+	def greenFirstTwoLayers(self):
+		w, y, g, b = self.wSide, self.ySide, self.gSide, self.bSide
+		r, o = self.rSide, self.oSide
+		final1 = self.easyCases(w, y, g, b, o, r)
+		final2 = self.casesPartTwo(w, y, g, b, o, r)
+		final3 = self.casesPartThree(w, y, g, b, o, r)
+		final4 = self.casesPartFour(w, y, g, b, o, r)
+		final5  = self.casesPartFive(w, y, g, b, o, r)
+		for i in [final1, final2, final3, final4, final5]:
+			if i!=None and i!=[]:
+				self.solution.extend(i)
+				self.move(i)
+
+	def orangeFirstTwoLayers(self):
+		w, y, g, b = self.wSide[:], self.ySide[:], self.gSide, self.bSide
+		r, o = self.rSide, self.oSide
+		self.rotatePrime(w)
+		self.rotate(y)
+		final1 = self.easyCases(w, y, o, r, b, g)
+		final2 = self.casesPartTwo(w, y, o, r, b, g)
+		final3 = self.casesPartThree(w, y, o, r, b, g)
+		final4 = self.casesPartFour(w, y, o, r, b, g)
+		final5 = self.casesPartFive(w, y, o, r, b, g)
+		for i in [final1, final2, final3, final4, final5]:
+			if i != None and i != []:
+				translation = translateRight(i)
+				self.solution.extend(translation)
+				self.move(translation)
+
+	def redFirstTwoLayers(self):
+		w, y, g, b = self.wSide[:], self.ySide[:], self.gSide, self.bSide
+		r, o = self.rSide, self.oSide
+		self.rotate(w)
+		self.rotatePrime(y)
+		final1 = self.easyCases(w, y, r, o, g, b)
+		final2 = self.casesPartTwo(w, y, r, o, g, b)
+		final3 = self.casesPartThree(w, y, r, o, g, b)
+		final4 = self.casesPartFour(w, y, r, o, g, b)
+		final5 = self.casesPartFive(w, y, r, o, g, b)
+		for i in [final1, final2, final3, final4, final5]:
+			if i != None and i != []:
+				translation = translateLeft(i)
+				self.solution.extend(translation)
+				self.move(translation)
+
+	def BlueFirstTwoLayers(self):
+		w, y, g, b = self.wSide[:], self.ySide[:], self.gSide, self.bSide
+		r, o = self.rSide, self.oSide
+		self.rotate(w);self.rotate(w)
+		self.rotate(y);self.rotate(y)
+		final1 = self.easyCases(w, y, b, g , r, o)
+		final2 = self.casesPartTwo(w, y, b, g, r, o)
+		final3 = self.casesPartThree(w, y, b, g, r, o)
+		final4 = self.casesPartFour(w, y, b, g, r, o)
+		final5 = self.casesPartFive(w, y, b, g, r, o)
+		for i in [final1, final2, final3, final4, final5]:
+			if i != None and i != []:
+				translation = translateBack(i)
 				self.solution.extend(translation)
 				self.move(translation)
 
@@ -234,14 +458,20 @@ class SolveCross(RubikCube):
 
 
 
+w, y, g, b, o, r = cross.getSides()
+
+crossSolution = cross.getSolution()
+layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution )
+layer.greenFirstTwoLayers()
+layer.BlueFirstTwoLayers()
+layer.redFirstTwoLayers()
+layer.move(["U'"])
+layer.orangeFirstTwoLayers()
+print  (layer.getSolution())
+layer.printCube()
 
 
 
-cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
-cross.move(["U'", "R", "R", "B", "B", "D", "L'", "B'", "U", "L", "R", "D'"])
-cross.redCubicle()
-cross.greenCubicle()
-cross.orangeCubicle()
-cross.blueCubicle()
-print (cross.getSolution())
-cross.printCube()
+
+
+
