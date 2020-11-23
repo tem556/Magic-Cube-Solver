@@ -556,8 +556,8 @@ w, y, g, b, o, r = cross.getSides()
 crossSolution = cross.getSolution()
 layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution )
 layer.solveTwoLayers()
-print  (layer.getSolution())
-layer.printCube()
+layerSolution = layer.getSolution()
+# layer.printCube()
 
 
 # Solves the final part of the cube
@@ -614,6 +614,7 @@ class LastLayer(RubikCube):
 			self.move(["F", "R", "U", "R'", "U'", "F'"])
 
 	def allYellow(self):
+		y,f,r,l = self.ySide, self.gSide, self.rSide, self.oSide
 		if y[2]=="y" and y[0]!="y" and y[6]!="y" and y[8]!="y" and r[0]=="y":
 			return ["R", "U", "U", "R'", "U'", "R", "U'", "R'"]
 		elif y[0]!="y" and y[2]!="y" and y[6]=="y" and y[8]!="y" and f[2]=="y":
@@ -628,7 +629,36 @@ class LastLayer(RubikCube):
 			return ["R","U","U","R","R","U'","R","R","U'","R","R","U","U", "R'"]
 		elif y[0]!="y" and y[2]!="y" and y[6]!="y" and y[8]!="y" and r[2]=="y" and l[2]=="y":
 			return ["R", "U", "R'", "U", "R", "U'", "R'", "U", "R", "U", "U" , "R'"]
-	
+
+	def tryRotate(self, func):
+		x = func()
+		if x==None:
+			self.move(["U"]);self.solution.extend(["U"])
+			x = func()
+		if x==None:
+			self.move(["U"]);self.solution.extend(["U"])
+			x = func()
+		if x==None:
+			self.move(["U", "U"]); self.solution = self.solution[:-2]
+			self.move(["U'"]); self.solution.extend(["U'"])
+			x = func()
+		if x!=None:
+			self.move(x);self.solution.extend(x)
+			return False
+		else:
+			self.move(["U"]);self.solution = self.solution[:-1]
+			return True
+
+	def finishAllYellow(self):
+		self.yellowCross()
+		self.tryRotate(self.allYellow)
+
+w, y, g, b, o, r = layer.getSides()
+yellow = LastLayer(g, b, w, y, r, o, layerSolution)
+yellow.finishAllYellow()
+yellow.printCube()
+print (yellow.getSolution())
+
 
 
 
