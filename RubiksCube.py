@@ -23,7 +23,7 @@ g = "g"; b = "b"; w = "w"; y = "y"; r = "r"; o = "o"
 #          o, o, o]
 
 class RubikCube:
-	def __init__(self, gSide, bSide, wSide, ySide, rSide, oSide , solution = []):
+	def __init__(self, gSide, bSide, wSide, ySide, rSide, oSide ,solution=[]):
 		self.gSide, self.bSide = gSide, bSide
 		self.wSide, self.ySide = wSide, ySide
 		self.rSide, self.oSide = rSide, oSide

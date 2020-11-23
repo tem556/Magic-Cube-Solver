@@ -3,23 +3,23 @@ from RubiksCube import *
 w = "w"; y = "y"; b = "b"; g = "g"; r = "r"; o = "o"
 
 wSide = [w, w, w,
-         w, w, w,
-         w, w, w]
+		 w, w, w,
+		 w, w, w]
 ySide = [y, y, y,
-         y, y, y,
-         y, y, y]
+		 y, y, y,
+		 y, y, y]
 bSide = [b, b, b,
-         b, b, b,
-         b, b, b]
+		 b, b, b,
+		 b, b, b]
 gSide = [g, g, g,
-         g, g, g,
-         g, g, g]
+		 g, g, g,
+		 g, g, g]
 rSide = [r, r, r,
-         r, r, r,
-         r, r, r]
+		 r, r, r,
+		 r, r, r]
 oSide = [o, o, o,
-         o, o, o,
-         o, o, o]
+		 o, o, o,
+		 o, o, o]
 
 # Helper functions, used for solving the cube
 # Function that translates the instructions for solving cube
@@ -291,50 +291,46 @@ class SolveFirstTwoLayers(RubikCube):
 
 
 	def easyCases(self, w, y, f, b, r, l):
-		sol = []
 		# Saves the colors for the front side and the right side
 		# Are the colors we are looking for.
 		fC, rC = f[4], r[4]
 		if f[2]==fC and r[0]=="w" and y[8]==rC and y[1]==fC and b[1]==rC:
-			sol.extend(["R", "U", "R'"])
+			return ["R", "U", "R'"]
 		elif f[2]=="w" and r[0]==rC and y[8]==fC and y[3]==rC and l[1]==fC:
-			sol.extend(["F'", "U'", "F"])
+			return ["F'", "U'", "F"]
 		elif f[2]==fC and r[0]=="w" and y[8]==rC and y[7]==rC and f[1]==fC:
-			sol.extend(["U'", "F'", "U", "F"])
+			return ["U'", "F'", "U", "F"]
 		elif f[2]=="w" and r[0]==rC and y[8]==fC and y[5]==fC and r[1]==rC:
-			sol.extend(["U", "R", "U'", "R'"])
+			return ["U", "R", "U'", "R'"]
 		elif f[1]==fC and f[8]==fC and  r[6]==rC and w[2]=="w" and y[7]==rC:
-			sol.extend(["U", "R", "U'", "R'", "U'", "F'", "U", "F"])
+			return ["U", "R", "U'", "R'", "U'", "F'", "U", "F"]
 		elif r[1]==rC and f[8]==fC and r[6]==rC and w[2]=="w" and y[5]==fC:
-			sol.extend(["U'", "F'", "U", "F", "U", "R", "U'", "R'"])
+			return ["U'", "F'", "U", "F", "U", "R", "U'", "R'"]
 		elif f[1]==fC and y[7]==rC and f[8]==rC and r[6]=="w" and w[2]==fC:
-			sol.extend(["F'", "U", "F", "U'", "F'", "U", "F"])
+			return ["F'", "U", "F", "U'", "F'", "U", "F"]
 		elif r[1]==rC and y[5]==fC and f[8]==rC and r[6]=="w" and w[2]==fC:
-			sol.extend(["R", "U", "R'", "U'", "R", "U", "R'"])
-		return sol
+			return ["R", "U", "R'", "U'", "R", "U", "R'"]
 
 	def casesPartTwo(self, w, y, f, b, r, l):
-		sol = []
 		fC, rC = f[4], r[4]
 		if f[8]=="w" and r[6]==fC and w[2]==rC and y[5]==fC and r[1]==rC:
-			sol.extend(["R", "U'", "R'", "U", "R", "U'", "R'"])
+			return ["R", "U'", "R'", "U", "R", "U'", "R'"]
 		elif f[1]==fC and y[7]==rC and f[8]=="w" and r[6]==fC and w[2]==rC:
-			sol.extend(["F'", "U'", "F", "U", "F'", "U'", "F"])
+			return ["F'", "U'", "F", "U", "F'", "U'", "F"]
 		elif f[5]==fC and r[3]==rC and y[8]=="w" and f[2]==rC and r[0]==fC:
-			sol.extend(["R", "U", "R'", "U'", "R", "U", "R'", "U'", "R", "U", "R'"])
+			return ["R", "U", "R'", "U'", "R", "U", "R'", "U'", "R", "U", "R'"]
 		elif f[5]==rC and r[3]==fC and f[2]==rC and r[0]==fC and y[8]=="w":
-			sol.extend(["R", "U'", "R'", "U", "F'", "U", "F"])
+			return ["R", "U'", "R'", "U", "F'", "U", "F"]
 		elif f[5]==fC and r[3]==rC and f[2]==fC and y[8]==rC and r[0]=="w":
-			sol.extend(["U", "F'", "U", "F", "U", "F'", "U", "U", "F"])
+			return ["U", "F'", "U", "F", "U", "F'", "U", "U", "F"]
 		elif f[5]==rC and r[3]==fC and f[2]==fC and r[0]=="w" and y[8]==rC:
-			sol.extend(["U", "F'", "U'", "F", "U'", "R", "U", "R'"])
+			return ["U", "F'", "U'", "F", "U'", "R", "U", "R'"]
 		elif f[5]==fC and r[3]==rC and f[2]=="w" and r[0]==rC and y[8]==fC:
-			sol.extend(["U'", "R", "U'", "R'", "U'", "R", "U", "U", "R'"])
+			return ["U'", "R", "U'", "R'", "U'", "R", "U", "U", "R'"]
 		elif f[5]==rC and r[3]==fC and f[2]=="w" and y[8]==fC and r[0]==rC:
-			sol.extend(["U'", "R", "U", "R'", "U", "F'", "U'", "F"])
+			return ["U'", "R", "U", "R'", "U", "F'", "U'", "F"]
 		elif y[5]==rC and r[1]==fC and f[2]==fC and y[8]==rC and r[0]=="w":
-			sol.extend(["R", "U'", "R'", "U", "U", "F'", "U'", "F"])
-		return sol
+			return ["R", "U'", "R'", "U", "U", "F'", "U'", "F"]
 
 	def casesPartThree (self, w, y, f, b, r, l):
 		fC, rC = f[4], r[4]
@@ -403,8 +399,7 @@ class SolveFirstTwoLayers(RubikCube):
 		final5  = self.casesPartFive(w, y, g, b, o, r)
 		for i in [final1, final2, final3, final4, final5]:
 			if i!=None and i!=[]:
-				self.solution.extend(i)
-				self.move(i)
+				return i
 
 	def orangeFirstTwoLayers(self):
 		w, y, g, b = self.wSide[:], self.ySide[:], self.gSide, self.bSide
@@ -419,8 +414,7 @@ class SolveFirstTwoLayers(RubikCube):
 		for i in [final1, final2, final3, final4, final5]:
 			if i != None and i != []:
 				translation = translateRight(i)
-				self.solution.extend(translation)
-				self.move(translation)
+				return translation
 
 	def redFirstTwoLayers(self):
 		w, y, g, b = self.wSide[:], self.ySide[:], self.gSide, self.bSide
@@ -435,8 +429,7 @@ class SolveFirstTwoLayers(RubikCube):
 		for i in [final1, final2, final3, final4, final5]:
 			if i != None and i != []:
 				translation = translateLeft(i)
-				self.solution.extend(translation)
-				self.move(translation)
+				return translation
 
 	def BlueFirstTwoLayers(self):
 		w, y, g, b = self.wSide[:], self.ySide[:], self.gSide, self.bSide
@@ -451,8 +444,60 @@ class SolveFirstTwoLayers(RubikCube):
 		for i in [final1, final2, final3, final4, final5]:
 			if i != None and i != []:
 				translation = translateBack(i)
-				self.solution.extend(translation)
-				self.move(translation)
+				return translation
+
+	# Function used for trying out different orders of solving
+	def greenLayers(self):
+		x = self.greenFirstTwoLayers()
+		if x==None:
+			self.move(["U"]);self.solution.extend(["U"])
+			x = self.greenFirstTwoLayers()
+		if x==None:
+			self.move(["U"]);self.solution.extend(["U"])
+			x = self.greenFirstTwoLayers()
+		if x==None:
+			self.move(["U", "U"]); self.solution = self.solution[:-2]
+			self.move(["U'"]); self.solution.extend(["U'"])
+			x = self.greenFirstTwoLayers()
+		if x!=None:
+			self.move(x);self.solution.extend(x)
+			return False
+		else:
+			self.move(["U"]);self.solution = self.solution[:-1]
+			return True
+
+	def greenContinued(self):
+		condition = self.greenLayers()
+		if condition :
+			move = ["R'", "U", "R"]
+			self.move(move); self.solution.extend(move)
+			condition = self.greenLayers()
+		if condition :
+			self.move(move); self.solution.extend(move)
+			condition = self.greenLayers()
+		if condition :
+			self.move(["R'", "U'","U'", "R"]); self.solution = self.solution[:-6]
+			move = ["L", "U'", "L'"]
+			self.move(move);self.solution.extend(move)
+			condition = self.greenLayers()
+		if condition :
+			self.move(move); self.solution.extend(move)
+			condition = self.greenLayers()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -462,11 +507,13 @@ w, y, g, b, o, r = cross.getSides()
 
 crossSolution = cross.getSolution()
 layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution )
-layer.greenFirstTwoLayers()
-layer.BlueFirstTwoLayers()
-layer.redFirstTwoLayers()
-layer.move(["U'"])
-layer.orangeFirstTwoLayers()
+# layer.solveAllLayers()
+layer.move(["L", "U", "U", "L'"])
+layer.greenContinued()
+# layer.BlueFirstTwoLayers()
+# layer.redFirstTwoLayers()
+# layer.move(["U'"])
+# layer.orangeFirstTwoLayers()
 print  (layer.getSolution())
 layer.printCube()
 
