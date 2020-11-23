@@ -249,7 +249,7 @@ class SolveCross(RubikCube):
 		return (wSide, ySide, gSide, bSide, oSide, rSide)
 
 cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
-cross.move(["U'", "R", "R", "B", "B", "D", "U", "L", "R", "D'"])
+cross.move(["U'", "D'", "B", "B", "U", "U", "D", "R", "D", "U", "U", "B","L", "L"])
 cross.redCubicle()
 cross.greenCubicle()
 cross.orangeCubicle()
@@ -447,18 +447,18 @@ class SolveFirstTwoLayers(RubikCube):
 				return translation
 
 	# Function used for trying out different orders of solving
-	def greenLayers(self):
-		x = self.greenFirstTwoLayers()
+	def tryRotate(self, func):
+		x = func()
 		if x==None:
 			self.move(["U"]);self.solution.extend(["U"])
-			x = self.greenFirstTwoLayers()
+			x = func()
 		if x==None:
 			self.move(["U"]);self.solution.extend(["U"])
-			x = self.greenFirstTwoLayers()
+			x = func()
 		if x==None:
 			self.move(["U", "U"]); self.solution = self.solution[:-2]
 			self.move(["U'"]); self.solution.extend(["U'"])
-			x = self.greenFirstTwoLayers()
+			x = func()
 		if x!=None:
 			self.move(x);self.solution.extend(x)
 			return False
@@ -466,50 +466,45 @@ class SolveFirstTwoLayers(RubikCube):
 			self.move(["U"]);self.solution = self.solution[:-1]
 			return True
 
-	def greenContinued(self):
-		condition = self.greenLayers()
+	def solveOneSide(self, func):
+		condition = self.tryRotate(func)
 		if condition :
 			move = ["R'", "U", "R"]
 			self.move(move); self.solution.extend(move)
-			condition = self.greenLayers()
+			condition = self.tryRotate(func)
 		if condition :
 			self.move(move); self.solution.extend(move)
-			condition = self.greenLayers()
+			condition = self.tryRotate(func)
 		if condition :
 			self.move(["R'", "U'","U'", "R"]); self.solution = self.solution[:-6]
 			move = ["L", "U'", "L'"]
 			self.move(move);self.solution.extend(move)
-			condition = self.greenLayers()
+			condition = self.tryRotate(func)
 		if condition :
 			self.move(move); self.solution.extend(move)
-			condition = self.greenLayers()
+			condition = self.tryRotate(func)
+		if condition :
+			self.move(["R'", "U", "R", "U", "U", "L", "U", "L'"])
+			self.solution.extend(["R'", "U", "R", "U", "U", "L", "U", "L'"])
+			condition = self.tryRotate(func)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+	def solveAllSide(self):
+		green, blue =  self.greenFirstTwoLayers, self.BlueFirstTwoLayers
+		red, orange = self.redFirstTwoLayers, self.orangeFirstTwoLayers
+		for i in [green, orange, blue, red]:
+			self.solveOneSide(i)
 
 
 
 
 
 w, y, g, b, o, r = cross.getSides()
-
 crossSolution = cross.getSolution()
 layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution )
 # layer.solveAllLayers()
-layer.move(["L", "U", "U", "L'"])
-layer.greenContinued()
+layer.solveAllSide()
 # layer.BlueFirstTwoLayers()
 # layer.redFirstTwoLayers()
 # layer.move(["U'"])
