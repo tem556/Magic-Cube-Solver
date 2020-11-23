@@ -145,7 +145,7 @@ class SolveCross(RubikCube):
 		elif wSide[7]=="w" and backSide[7]==color:
 			sol.extend(["B", "B", "U", "U", "F", "F"])
 		elif wSide[1]==color and frontSide[7]=="w":
-			sol.extend(["F'", "D'", "L", "D"])
+			sol.extend(["F'", "D", "R'", "D'"])
 		elif wSide[3]==color and leftSide[7]=="w":
 			sol.extend(["L'", "F'", "L"])
 		elif wSide[5]==color and rightSide[7]=="w":
@@ -245,18 +245,21 @@ class SolveCross(RubikCube):
 				self.solution.extend(translation)
 				self.move(translation)
 
+	def solveAllSides(self):
+		self.greenCubicle()
+		self.redCubicle()
+		self.orangeCubicle()
+		self.blueCubicle()
+
+
 	def getSides(self):
 		return (wSide, ySide, gSide, bSide, oSide, rSide)
 
 cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
-cross.move(["U'", "R", "R", "B", "B", "D", "U", "L", "R", "D'"])
-cross.redCubicle()
-cross.greenCubicle()
-cross.orangeCubicle()
-cross.blueCubicle()
-
+cross.move(["L'", 'R', 'B2', "U'", 'L', 'D', 'R', "D'", 'L2', 'B', 'F2', 'U', "L'", 'D2', "B'", "U'", "D'", "F'", 'U', 'D2', 'B2', "R'", "L'", 'U2', 'F', "L'", "R'", 'U', 'D', "B'"])
+cross.solveAllSides()
 # z = cross.getSides()
-# cross.printCube()
+
 
 # Solves first two layers of the cube after having the cross done
 # whiteSide, yellowSide, frontSide, backSide, rightSide, leftSide
@@ -431,7 +434,7 @@ class SolveFirstTwoLayers(RubikCube):
 				translation = translateLeft(i)
 				return translation
 
-	def BlueFirstTwoLayers(self):
+	def blueFirstTwoLayers(self):
 		w, y, g, b = self.wSide[:], self.ySide[:], self.gSide, self.bSide
 		r, o = self.rSide, self.oSide
 		self.rotate(w);self.rotate(w)
@@ -447,18 +450,18 @@ class SolveFirstTwoLayers(RubikCube):
 				return translation
 
 	# Function used for trying out different orders of solving
-	def greenLayers(self):
-		x = self.greenFirstTwoLayers()
+	def tryRotate(self, func):
+		x = func()
 		if x==None:
 			self.move(["U"]);self.solution.extend(["U"])
-			x = self.greenFirstTwoLayers()
+			x = func()
 		if x==None:
 			self.move(["U"]);self.solution.extend(["U"])
-			x = self.greenFirstTwoLayers()
+			x = func()
 		if x==None:
 			self.move(["U", "U"]); self.solution = self.solution[:-2]
 			self.move(["U'"]); self.solution.extend(["U'"])
-			x = self.greenFirstTwoLayers()
+			x = func()
 		if x!=None:
 			self.move(x);self.solution.extend(x)
 			return False
@@ -467,55 +470,171 @@ class SolveFirstTwoLayers(RubikCube):
 			return True
 
 	def greenContinued(self):
-		condition = self.greenLayers()
+		condition = self.tryRotate(self.greenFirstTwoLayers)
+		if condition :
+			move = ["F", "U", "F'"]
+			self.move(move)
+			self.solution.extend(move)
+			condition = self.tryRotate(self.greenFirstTwoLayers)
 		if condition :
 			move = ["R'", "U", "R"]
 			self.move(move); self.solution.extend(move)
-			condition = self.greenLayers()
+			condition = self.tryRotate(self.greenFirstTwoLayers)
 		if condition :
 			self.move(move); self.solution.extend(move)
-			condition = self.greenLayers()
+			condition = self.tryRotate(self.greenFirstTwoLayers)
 		if condition :
-			self.move(["R'", "U'","U'", "R"]); self.solution = self.solution[:-6]
+			self.move(["R'", "U'","U'", "R"])
+			self.solution = self.solution[:-6]
 			move = ["L", "U'", "L'"]
 			self.move(move);self.solution.extend(move)
-			condition = self.greenLayers()
+			condition = self.tryRotate(self.greenFirstTwoLayers)
 		if condition :
 			self.move(move); self.solution.extend(move)
-			condition = self.greenLayers()
+			condition = self.tryRotate(self.greenFirstTwoLayers)
+		if condition :
+			# Cancels the changes made from previous attempt
+			self.move(["L", "U", "L'"])
+			self.solution = self.solution[:-3]
+			self.move(["U", "U", "R'", "U", "R"])
+			self.solution.extend(["U", "U", "R'", "U", "R"])
+			condition = self.tryRotate(self.greenFirstTwoLayers)
 
+	def orangeContinued (self):
+		condition = self.tryRotate(self.orangeFirstTwoLayers)
+		if condition :
+			move = ["B'", 'U', 'B']
+			self.move(move); self.solution.extend(move)
+			condition = self.tryRotate(self.orangeFirstTwoLayers)
+		if condition :
+			self.move(move); self.solution.extend(move)
+			condition = self.tryRotate(self.orangeFirstTwoLayers)
+		if condition :
+			self.move(["B'", "U'", "U'", 'B'])
+			self.solution = self.solution[:-6]
+			move = ['F', "U'", "F'"]
+			self.move(move);self.solution.extend(move)
+			condition = self.tryRotate(self.orangeFirstTwoLayers)
+		if condition :
+			self.move(move); self.solution.extend(move)
+			condition = self.tryRotate(self.orangeFirstTwoLayers)
+		if condition :
+			# Cancels the changes made from previous attempt
+			self.move(['F', "U'", "F'"])
+			self.solution = self.solution[:-3]
+			self.move(['U', 'U', "B'", 'U', 'B'])
+			self.solution.extend(['U', 'U', "B'", 'U', 'B'])
+			condition = self.tryRotate(self.orangeFirstTwoLayers)
 
+	def blueContinued (self):
+		condition = self.tryRotate(self.blueFirstTwoLayers)
+		if condition:
+			move = ["L'", 'U', 'L']
+			self.move(move)
+			self.solution.extend(move)
+			condition = self.tryRotate(self.blueFirstTwoLayers)
+		if condition:
+			self.move(move)
+			self.solution.extend(move)
+			condition = self.tryRotate(self.blueFirstTwoLayers)
 
+	def redContinued(self):
+		condition = self.tryRotate(self.redFirstTwoLayers)
+	def solveTwoLayers(self):
+		self.greenContinued()
+		self.orangeContinued()
+		self.blueContinued()
+		self.redContinued()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+	def getSides(self):
+		return (wSide, ySide, gSide, bSide, oSide, rSide)
 
 
 
 w, y, g, b, o, r = cross.getSides()
-
+#
 crossSolution = cross.getSolution()
 layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution )
-# layer.solveAllLayers()
-layer.move(["L", "U", "U", "L'"])
-layer.greenContinued()
-# layer.BlueFirstTwoLayers()
-# layer.redFirstTwoLayers()
-# layer.move(["U'"])
-# layer.orangeFirstTwoLayers()
+layer.solveTwoLayers()
 print  (layer.getSolution())
 layer.printCube()
+
+
+# Solves the final part of the cube
+class LastLayer(RubikCube):
+	def getSolution (self):
+		sol = self.solution
+		# Is used if the same move appears three consecutive time
+		# Turns them into one move with opposite direction
+		for i in range(2, len(sol)):
+			if sol[i]==sol[i-1] and sol[i-1]==sol[i-2]:
+				sol[i] = "X"
+				sol[i-1] = "X"
+				if "'" in sol[i]:
+					sol[i-2] = sol[i-2][:1]
+				else:
+					sol[i-2] = sol[i-2] + "'"
+		# Is used when the same move appears four times, deletes them
+		for i in range (3, len(sol)):
+			if sol[i]==sol[i-1] and sol[i-1]==sol[i-2] and sol[i-2]==sol[i-3]:
+				sol[i], sol[i-1], sol[i-2], sol[i-3] = "X", "X", "X", "X"
+
+		# Is used when a move and their opposite direction move appear
+		# consecutively, deletes them
+		for i in range(1, len(sol)):
+			if sol[i]==sol[i-1]+"'" or sol[i-1]==sol[i]+"'":
+				sol[i], sol[i-1] = "X", "X"
+		# "Deleted" moves were converted into X's before, now will be deleted
+		while "X" in sol:
+			sol.remove("X")
+		return sol
+
+	def yellowCross(self):
+		y = self.ySide
+		if y[1]!="y" and y[3]!="y" and y[5]!="y" and y[7]!="y":
+			self.solution.extend(["F", "R", "U", "R'", "U'", "F'"])
+			self.move(["F", "R", "U", "R'", "U'", "F'"])
+		if y[5]=="y" and y[7]=="y":
+			self.solution.extend(["F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
+			self.move(["F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
+		elif y[1]=="y" and y[3]=="y":
+			self.solution.extend(["U", "U", "F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
+			self.move(["U", "U", "F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
+		elif y[1]=="y" and y[5]=="y":
+			self.solution.extend(["U", "F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
+			self.move(["U", "F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
+		elif y[3]=="y" and y[7]=="y":
+			self.solution.extend(["U'", "F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
+			self.move(["U'", "F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
+		elif y[1]=="y" and y[7]=="y":
+			self.solution.extend(["U", "F", "R", "U", "R'", "U'", "F'" ])
+			self.move(["U", "F", "R", "U", "R'", "U'", "F'" ])
+		elif y[3]=="y" and y[5]=="y":
+			self.solution.extend(["F", "R", "U", "R'", "U'", "F'"])
+			self.move(["F", "R", "U", "R'", "U'", "F'"])
+
+	def allYellow(self):
+		if y[2]=="y" and y[0]!="y" and y[6]!="y" and y[8]!="y" and r[0]=="y":
+			return ["R", "U", "U", "R'", "U'", "R", "U'", "R'"]
+		elif y[0]!="y" and y[2]!="y" and y[6]=="y" and y[8]!="y" and f[2]=="y":
+			return ["R", "U", "R'", "U", "R", "U", "U", "R'"]
+		elif y[0]=="y" and y[2]=="y" and y[6]!="y" and y[8]!="y" and f[0]!="y":
+			return ["L", "F", "R'", "F'", "L'", "F", "R", "F'"]
+		elif y[0]!="y" and y[2]=="y" and y[6]=="y" and y[8]=="y" and f[2]=="y":
+			return ["F'", "L", "F", "R'", "F'", "L'", "F", "R"]
+		elif y[0]=="y" and y[2]=="y" and y[6]!="y" and y[8]!="y" and f[0]=="y":
+			return ["R", "R", "D", "R'", "U", "U", "R", "D'", "R'", "U", "U", "R'"]
+		elif y[0]!="y" and y[2]!="y" and y[6]!="y" and y[8]!="y" and f[2]=="y" and l[0]=="y":
+			return ["R","U","U","R","R","U'","R","R","U'","R","R","U","U", "R'"]
+		elif y[0]!="y" and y[2]!="y" and y[6]!="y" and y[8]!="y" and r[2]=="y" and l[2]=="y":
+			return ["R", "U", "R'", "U", "R", "U'", "R'", "U", "R", "U", "U" , "R'"]
+	
+
+
+
+
+
+
 
 
 
