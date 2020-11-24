@@ -256,7 +256,7 @@ class SolveCross(RubikCube):
 		return (wSide, ySide, gSide, bSide, oSide, rSide)
 
 cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
-cross.move(["L'", 'R', 'B2', "U'", 'L', 'D', 'R', "D'", 'L2', 'B', 'F2', 'U', "L'", 'D2', "B'", "U'", "D'", "F'", 'U', 'D2', 'B2', "R'", "L'", 'U2', 'F', "L'", "R'", 'U', 'D', "B'"])
+cross.move(['U', 'B', 'F2', 'U', 'F2', "L'", 'R2', 'B2', 'D', 'U2', 'F', 'R2', 'D2', 'U2', 'B2', 'U2', "L'", "U'", 'B', "R'", 'D2', "L'", "B'"])
 cross.solveAllSides()
 # z = cross.getSides()
 
@@ -594,22 +594,22 @@ class LastLayer(RubikCube):
 		if y[1]!="y" and y[3]!="y" and y[5]!="y" and y[7]!="y":
 			self.solution.extend(["F", "R", "U", "R'", "U'", "F'"])
 			self.move(["F", "R", "U", "R'", "U'", "F'"])
-		if y[5]=="y" and y[7]=="y":
-			self.solution.extend(["F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
-			self.move(["F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
-		elif y[1]=="y" and y[3]=="y":
-			self.solution.extend(["U", "U", "F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
-			self.move(["U", "U", "F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
-		elif y[1]=="y" and y[5]=="y":
-			self.solution.extend(["U", "F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
-			self.move(["U", "F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
-		elif y[3]=="y" and y[7]=="y":
-			self.solution.extend(["U'", "F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
-			self.move(["U'", "F", "R", "U", "R'", "U'", "F'", "U", "F", "R", "U", "R'", "U'", "F'"])
-		elif y[1]=="y" and y[7]=="y":
+		if y[5]=="y" and y[7]=="y" and y[1]!="y" and y[3]!="y":
+			self.solution.extend(["B", "U", "L", "U'", "L'", "B'"])
+			self.move(["B", "U", "L", "U'", "L'", "B'"])
+		elif y[1]=="y" and y[3]=="y" and y[5]!="y" and y[7]!="y":
+			self.solution.extend(["U", "U", "B", "U", "L", "U'", "L'", "B'"])
+			self.move(["U", "U", "B", "U", "L", "U'", "L'", "B'"])
+		elif y[1]=="y" and y[5]=="y" and y[3]!="y" and y[7]!="y":
+			self.solution.extend(["U", "B", "U", "L", "U'", "L'", "B'"])
+			self.move(["U", "B", "U", "L", "U'", "L'", "B'"])
+		elif y[3]=="y" and y[7]=="y" and y[1]!="y" and y[5]!="y":
+			self.solution.extend(["U'", "B", "U", "L", "U'", "L'", "B'"])
+			self.move(["U'", "B", "U", "L", "U'", "L'", "B'"])
+		elif y[1]=="y" and y[7]=="y" and y[5]!="y" and y[3]!="y":
 			self.solution.extend(["U", "F", "R", "U", "R'", "U'", "F'" ])
 			self.move(["U", "F", "R", "U", "R'", "U'", "F'" ])
-		elif y[3]=="y" and y[5]=="y":
+		elif y[3]=="y" and y[5]=="y" and y[1]!="y" and y[7]!="y":
 			self.solution.extend(["F", "R", "U", "R'", "U'", "F'"])
 			self.move(["F", "R", "U", "R'", "U'", "F'"])
 
