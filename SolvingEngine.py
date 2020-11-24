@@ -592,9 +592,15 @@ class LastLayer(RubikCube):
 		for i in range(1, len(sol)):
 			if sol[i]==sol[i-1]+"'" or sol[i-1]==sol[i]+"'":
 				sol[i], sol[i-1] = "X", "X"
+
+		for i in range(1, len(sol)):
+			if sol[i]==sol[i-1]:
+				sol[i], sol[i-1] =  "X", sol[i]+"2"
 		# "Deleted" moves were converted into X's before, now will be deleted
 		while "X" in sol:
 			sol.remove("X")
+		while "X2" in sol:
+			sol.remove("X2")
 		return sol
 
 	def yellowCross(self):
@@ -718,6 +724,16 @@ class LastLayer(RubikCube):
 		self.tryRotate(self.pLLPartOne)
 		self.tryRotate(self.pLLPartTwo)
 		self.tryRotate(self.pLLPartThree)
+		if self.gSide[1]=="r":
+			self.solution.extend(["U"])
+			self.move(["U"])
+		elif self.gSide[1]=="b":
+			self.solution.extend(["U","U"])
+			self.move(["U", "U"])
+		elif self.gSide[1]=="o":
+			self.solution.extend(["U'"])
+			self.move(["U'"])
+
 
 
 
