@@ -1,5 +1,5 @@
 from RubiksCube import *
-
+import random
 w = "w"; y = "y"; b = "b"; g = "g"; r = "r"; o = "o"
 
 wSide = [w, w, w,
@@ -258,9 +258,6 @@ class SolveCross(RubikCube):
 
 
 
-cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
-cross.move(['U', 'D',"R","F","U'","D","B"])
-cross.solveAllSides()
 # z = cross.getSides()
 
 
@@ -476,8 +473,7 @@ class SolveFirstTwoLayers(RubikCube):
 		condition = self.tryRotate(self.greenFirstTwoLayers)
 		if condition :
 			move = ["F", "U", "F'"]
-			self.move(move)
-			self.solution.extend(move)
+			self.move(move);self.solution.extend(move)
 			condition = self.tryRotate(self.greenFirstTwoLayers)
 		if condition :
 			move = ["R'", "U", "R"]
@@ -487,8 +483,7 @@ class SolveFirstTwoLayers(RubikCube):
 			self.move(move); self.solution.extend(move)
 			condition = self.tryRotate(self.greenFirstTwoLayers)
 		if condition :
-			self.move(["R'", "U'","U'", "R"])
-			self.solution = self.solution[:-6]
+			self.move(["R'", "U'","U'", "R"]);self.solution = self.solution[:-6]
 			move = ["L", "U'", "L'"]
 			self.move(move);self.solution.extend(move)
 			condition = self.tryRotate(self.greenFirstTwoLayers)
@@ -497,8 +492,7 @@ class SolveFirstTwoLayers(RubikCube):
 			condition = self.tryRotate(self.greenFirstTwoLayers)
 		if condition :
 			# Cancels the changes made from previous attempt
-			self.move(["L", "U", "L'"])
-			self.solution = self.solution[:-3]
+			self.move(["L", "U", "L'"]);self.solution = self.solution[:-3]
 			self.move(["U", "U", "R'", "U", "R"])
 			self.solution.extend(["U", "U", "R'", "U", "R"])
 			condition = self.tryRotate(self.greenFirstTwoLayers)
@@ -559,12 +553,7 @@ class SolveFirstTwoLayers(RubikCube):
 
 
 
-w, y, g, b, o, r = cross.getSides()
-#
-crossSolution = cross.getSolution()
-layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution )
-layer.solveTwoLayers()
-layerSolution = layer.getSolution()
+
 # layer.printCube()
 
 
@@ -635,12 +624,12 @@ class LastLayer(RubikCube):
 			return ["R", "U", "R'", "U", "R", "U", "U", "R'"]
 		elif y[0]!="y" and y[2]=="y" and y[6]!="y" and y[8]=="y" and f[0]=="y":
 			return ["L", "F", "R'", "F'", "L'", "F", "R", "F'"]
-		elif y[0]!="y" and y[2]=="y" and y[6]=="y" and y[8]=="y" and f[2]=="y":
+		elif y[0]!="y" and y[2]=="y" and y[6]=="y" and y[8]!="y" and f[2]=="y":
 			return ["F'", "L", "F", "R'", "F'", "L'", "F", "R"]
 		elif y[0]=="y" and y[2]=="y" and y[6]!="y" and y[8]!="y" and f[0]=="y":
 			return ["R", "R", "D", "R'", "U", "U", "R", "D'", "R'", "U", "U", "R'"]
 		elif y[0]!="y" and y[2]!="y" and y[6]!="y" and y[8]!="y" and f[2]=="y" and l[0]=="y":
-			return ["R","U","U","R","R","U'","R","R","U'","R","R","U","U", "R'"]
+			return ["R","U","U","R","R","U'","R","R","U'","R","R","U","U", "R"]
 		elif y[0]!="y" and y[2]!="y" and y[6]!="y" and y[8]!="y" and r[2]=="y" and l[2]=="y":
 			return ["R", "U", "R'", "U", "R", "U'", "R'", "U", "R", "U", "U" , "R'"]
 
@@ -668,16 +657,16 @@ class LastLayer(RubikCube):
 		y, f, r, l = self.ySide, self.gSide, self.oSide, self.rSide
 		b = self.bSide
 		if b[0]==b[1] and b[1]==b[2] and f[1]==r[0] and r[0]==r[2]:
-			return ["R", "R", "U", "R", "U", "R'","U'", "R'", "U'", "R'", "U", "R'"]
-		elif b[0]==b[1] and b[1]==b[2] and f[1]==l[0] and l[0]==l[2]:
 			return ["R","U'", "R", "U", "R", "U", "R", "U'", "R'", "U'", "R", "R"]
+		elif b[0]==b[1] and b[1]==b[2] and f[1]==l[0] and l[0]==l[2]:
+			return ["R", "R", "U", "R", "U", "R'","U'", "R'", "U'", "R'", "U", "R'"]
 		elif f[0]==f[1] and l[1]==l[2] and b[0]==b[2] and b[1]==l[0]:
 			return ["R'", "F", "R'", "B", "B", "R", "F'", "R'", "B", "B", "R", "R"]
 		elif f[0]==f[1] and l[1]==l[2] and r[0]==r[2] and r[1]==l[0]:
 			return ["R", "R", "B", "B", "R", "F", "R'", "B", "B", "R", "F'", "R"]
 		elif l[0]==l[2] and f[0]==f[1] and l[1]==b[2] and b[0]==f[2]:
 			return ['B','U','U',"B'",'U','U','B',"L'","B'","U'",'B','U','B','L','B','B','U']
-		elif l[1]==l[2] and f[0]==f[2] and l[0]==r[2] and [1]==f[0]:
+		elif l[1]==l[2] and f[0]==f[2] and l[0]==r[2] and r[1]==f[0]:
 			return ["R'","U","U","R'","D'","R","U'","R'","D","R","U","R","U'","R'","U'","R","U'"]
 		elif f[0]==f[1] and f[1]==f[2] and r[0]==r[1] and l[2]==b[1]:
 			return ["R'","U","L'","U","U","R","U'","R'","U","U","R","L","U'"]
@@ -699,7 +688,7 @@ class LastLayer(RubikCube):
 			return ["R","R","U","R'","U","R'","U'","R","U'","R","R","D","U'","R'","U","R","D'","U"]
 		elif f[1]==f[2] and b[0]==b[2] and r[1]==b[0] and f[0]==l[1]:
 			return ["F'","U'","F","R","R","D","B'",'U','B',"U'",'B',"D'","R","R"]
-		elif l[0]==l[2] and b[0]==b[1] and f[1]==b[1] and l[1]==r[2]:
+		elif l[0]==l[2] and b[0]==b[1] and f[2]==b[1] and l[1]==r[2]:
 			return ["R", "R", "U'", "R","U'","R","U","R'","U","R","R","D'","U","R","U'","R'","D","U'"]
 		elif l[0]==l[2] and r[0]==r[1] and f[1]==l[0] and f[0]==b[1]:
 			return ["R", "U","R'","F","F","D'",'L', "U'", "L'", 'U', "L'", "D", "F","F"]
@@ -720,7 +709,10 @@ class LastLayer(RubikCube):
 
 	def finishCube(self):
 		self.yellowCross()
+		self.solution.extend(["yellow cross solved"])
 		self.tryRotate(self.allYellow)
+		self.solution.extend(["Yellow side solved"])
+
 		self.tryRotate(self.pLLPartOne)
 		self.tryRotate(self.pLLPartTwo)
 		self.tryRotate(self.pLLPartThree)
@@ -735,7 +727,27 @@ class LastLayer(RubikCube):
 			self.move(["U'"])
 
 
+# This part is used for testing
+# Note, there still is a permutation where the third white block
+# on the  first row is not in its correct permutation, if that happens the cube isn't solved
+# rest of stuff, is working for now
+randomScramble = []
+choices = ["R", "R'", "U", "U'", "B","B'", "F", "F'", "L", "L'"]
+for i in range(20):
+	randomScramble.append(random.choice(choices))
 
+
+print (randomScramble)
+cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
+cross.move(randomScramble)
+cross.solveAllSides()
+
+w, y, g, b, o, r = cross.getSides()
+#
+crossSolution = cross.getSolution()
+layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution )
+layer.solveTwoLayers()
+layerSolution = layer.getSolution()
 
 w, y, g, b, o, r = layer.getSides()
 yellow = LastLayer(g, b, w, y, r, o, layerSolution)
