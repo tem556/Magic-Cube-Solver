@@ -250,13 +250,16 @@ class SolveCross(RubikCube):
 		self.redCubicle()
 		self.orangeCubicle()
 		self.blueCubicle()
+		self.solution.extend(["Cross Solved"])
 
 
 	def getSides(self):
 		return (wSide, ySide, gSide, bSide, oSide, rSide)
 
+
+
 cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
-cross.move(['U', 'B', 'F2', 'U', 'F2', "L'", 'R2', 'B2', 'D', 'U2', 'F', 'R2', 'D2', 'U2', 'B2', 'U2', "L'", "U'", 'B', "R'", 'D2', "L'", "B'"])
+cross.move(['U', 'D',"R","F","U'","D","B"])
 cross.solveAllSides()
 # z = cross.getSides()
 
@@ -500,6 +503,7 @@ class SolveFirstTwoLayers(RubikCube):
 			self.solution.extend(["U", "U", "R'", "U", "R"])
 			condition = self.tryRotate(self.greenFirstTwoLayers)
 
+
 	def orangeContinued (self):
 		condition = self.tryRotate(self.orangeFirstTwoLayers)
 		if condition :
@@ -542,9 +546,13 @@ class SolveFirstTwoLayers(RubikCube):
 		condition = self.tryRotate(self.redFirstTwoLayers)
 	def solveTwoLayers(self):
 		self.greenContinued()
+		self.solution.extend(["green done"])
 		self.orangeContinued()
+		self.solution.extend(["orange done"])
 		self.blueContinued()
+		self.solution.extend(["blue done"])
 		self.redContinued()
+		self.solution.extend(["red done"])
 
 	def getSides(self):
 		return (wSide, ySide, gSide, bSide, oSide, rSide)
@@ -614,12 +622,12 @@ class LastLayer(RubikCube):
 			self.move(["F", "R", "U", "R'", "U'", "F'"])
 
 	def allYellow(self):
-		y,f,r,l = self.ySide, self.gSide, self.rSide, self.oSide
+		y,f,r,l = self.ySide, self.gSide, self.oSide, self.rSide
 		if y[2]=="y" and y[0]!="y" and y[6]!="y" and y[8]!="y" and r[0]=="y":
 			return ["R", "U", "U", "R'", "U'", "R", "U'", "R'"]
 		elif y[0]!="y" and y[2]!="y" and y[6]=="y" and y[8]!="y" and f[2]=="y":
 			return ["R", "U", "R'", "U", "R", "U", "U", "R'"]
-		elif y[0]=="y" and y[2]=="y" and y[6]!="y" and y[8]!="y" and f[0]!="y":
+		elif y[0]!="y" and y[2]=="y" and y[6]!="y" and y[8]=="y" and f[0]=="y":
 			return ["L", "F", "R'", "F'", "L'", "F", "R", "F'"]
 		elif y[0]!="y" and y[2]=="y" and y[6]=="y" and y[8]=="y" and f[2]=="y":
 			return ["F'", "L", "F", "R'", "F'", "L'", "F", "R"]
@@ -649,13 +657,73 @@ class LastLayer(RubikCube):
 			self.move(["U"]);self.solution = self.solution[:-1]
 			return True
 
-	def finishAllYellow(self):
+	# Has the cases with a probability of 1/18
+	def pLLPartOne(self):
+		y, f, r, l = self.ySide, self.gSide, self.oSide, self.rSide
+		b = self.bSide
+		if b[0]==b[1] and b[1]==b[2] and f[1]==r[0] and r[0]==r[2]:
+			return ["R", "R", "U", "R", "U", "R'","U'", "R'", "U'", "R'", "U", "R'"]
+		elif b[0]==b[1] and b[1]==b[2] and f[1]==l[0] and l[0]==l[2]:
+			return ["R","U'", "R", "U", "R", "U", "R", "U'", "R'", "U'", "R", "R"]
+		elif f[0]==f[1] and l[1]==l[2] and b[0]==b[2] and b[1]==l[0]:
+			return ["R'", "F", "R'", "B", "B", "R", "F'", "R'", "B", "B", "R", "R"]
+		elif f[0]==f[1] and l[1]==l[2] and r[0]==r[2] and r[1]==l[0]:
+			return ["R", "R", "B", "B", "R", "F", "R'", "B", "B", "R", "F'", "R"]
+		elif l[0]==l[2] and f[0]==f[1] and l[1]==b[2] and b[0]==f[2]:
+			return ['B','U','U',"B'",'U','U','B',"L'","B'","U'",'B','U','B','L','B','B','U']
+		elif l[1]==l[2] and f[0]==f[2] and l[0]==r[2] and [1]==f[0]:
+			return ["R'","U","U","R'","D'","R","U'","R'","D","R","U","R","U'","R'","U'","R","U'"]
+		elif f[0]==f[1] and f[1]==f[2] and r[0]==r[1] and l[2]==b[1]:
+			return ["R'","U","L'","U","U","R","U'","R'","U","U","R","L","U'"]
+		elif l[0]==l[1] and l[1]==l[2] and b[1]==b[2] and f[0]==r[1]:
+			return ["R","U","R'","F'","R","U","R'","U'","R'","F","R","R","U'","R'","U'"]
+		elif f[0]==f[1] and b[1]==b[2] and l[0]==l[2] and r[1]==l[0]:
+			return ["R","U","R'","U'","R'","F","R","R","U'","R'","U'","R","U","R'","F'"]
+		elif l[0]==l[1] and l[1]==l[2] and r[0]==b[2] and r[2]==f[0]:
+			return ["R'","U'","F'","R","U","R'","U'","R'","F","R","R","U'","R'","U'","R","U","R'","U","R"]
+
+	def pLLPartTwo(self):
+		y, f, r, l = self.ySide, self.gSide, self.oSide, self.rSide
+		b = self.bSide
+		if l[1]==l[2] and f[0]==f[1] and r[0]==l[1] and r[1]==b[0]:
+			return ["R'","U","R'","U'","B'","R'",'B','B',"U'","B'",'U',"B'",'R','B','R']
+		elif f[0]==f[1] and r[1]==r[2] and f[2]==l[1] and r[0]==l[2]:
+			return ["F","R","U'","R'","U'","R","U","R'","F'","R","U","R'","U'","R'","F","R","F'"]
+		elif l[0]==[2] and f[1]==f[2] and f[0]==b[1] and l[2]==r[1]:
+			return ["R","R","U","R'","U","R'","U'","R","U'","R","R","D","U'","R'","U","R","D'","U"]
+		elif f[1]==f[2] and b[0]==b[2] and r[1]==b[0] and f[0]==l[1]:
+			return ["F'","U'","F","R","R","D","B'",'U','B',"U'",'B',"D'","R","R"]
+		elif l[0]==l[2] and b[0]==b[1] and f[1]==b[1] and l[1]==r[2]:
+			return ["R", "R", "U'", "R","U'","R","U","R'","U","R","R","D'","U","R","U'","R'","D","U'"]
+		elif l[0]==l[2] and r[0]==r[1] and f[1]==l[0] and f[0]==b[1]:
+			return ["R", "U","R'","F","F","D'",'L', "U'", "L'", 'U', "L'", "D", "F","F"]
+
+	def pLLPartThree(self):
+		y, f, r, l = self.ySide, self.gSide, self.oSide, self.rSide
+		b = self.bSide
+		if f[1]==b[0] and b[0]==b[2] and r[1]==l[0] and l[0]==l[2]:
+			return ["L'", "R'", "U","U","L","R","F","B","U","U","F'","B'"]
+		elif  f[1]==r[0] and r[0]==r[2] and l[1]==b[0] and b[0]==b[2]:
+			return ["R","B'","R'","B","F","R'","F","B'","R'","B","R","F","F"]
+		elif r[0]==l[2] and r[2]==l[0] and f[0]==b[2] and f[2]==b[0]:
+			return ["F","R","B","R'","F'","R","L","F","L'","B'","L","F'","R'","L'"]
+		elif f[0] == f[1] and l[0] == l[1] and f[2] == b[1] and l[2] == r[1]:
+			return ["R","U'","R","R","F","F","U'","R","F","F","R'","U","F","F","R","R","U","R'"]
+		elif f[1] == f[2] and l[2] == l[1] and f[0] == b[1] and r[0] == l[1]:
+			return ["R'", "U", "R","R","B","B","U","R'","B","B","R","U'","B","B","R","R","U'","R"]
+
+	def finishCube(self):
 		self.yellowCross()
 		self.tryRotate(self.allYellow)
+		self.tryRotate(self.pLLPartOne)
+		self.tryRotate(self.pLLPartTwo)
+		self.tryRotate(self.pLLPartThree)
+
+
 
 w, y, g, b, o, r = layer.getSides()
 yellow = LastLayer(g, b, w, y, r, o, layerSolution)
-yellow.finishAllYellow()
+yellow.finishCube()
 yellow.printCube()
 print (yellow.getSolution())
 
