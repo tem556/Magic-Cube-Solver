@@ -476,6 +476,21 @@ class SolveFirstTwoLayers(RubikCube):
 			self.move(move);self.solution.extend(move)
 			condition = self.tryRotate(self.greenFirstTwoLayers)
 		if condition :
+			self.move(move);self.solution.extend(move)
+			condition = self.tryRotate(self.greenFirstTwoLayers)
+		if condition :
+			self.move(["F", "U'", "F'"])
+			self.solution = self.solution[:-3]
+			self.move(["R'", "U", "R"]);self.solution.extend(["R'", "U", "R"])
+			condition = self.tryRotate(self.greenFirstTwoLayers)
+		if condition :
+			self.move(["R", "U'", "R'"])
+			self.solution = self.solution[:-3]
+			self.move(["L","U'","L'"]);self.solution.extend(["L","U'","L'"])
+			condition = self.tryRotate(self.greenFirstTwoLayers)
+		if condition :
+			self.move(["L'", "U", "L", "F", "U", "F'"])
+			self.solution = self.solution[:-6]
 			move = ["R'", "U", "R"]
 			self.move(move); self.solution.extend(move)
 			condition = self.tryRotate(self.greenFirstTwoLayers)
@@ -492,10 +507,19 @@ class SolveFirstTwoLayers(RubikCube):
 			condition = self.tryRotate(self.greenFirstTwoLayers)
 		if condition :
 			# Cancels the changes made from previous attempt
-			self.move(["L", "U", "L'"]);self.solution = self.solution[:-3]
-			self.move(["U", "U", "R'", "U", "R"])
-			self.solution.extend(["U", "U", "R'", "U", "R"])
+			# And tries out a combination of left and right shifting
+			self.move(["L", "U","L'" ]);self.solution = self.solution[:-6]
+			self.move(["R'","U","U", "R"])
+			self.solution.extend(["R'","U","U", "R"])
 			condition = self.tryRotate(self.greenFirstTwoLayers)
+		if condition :
+			self.move(["R'", "U'", "R", "U'", "U'"])
+			self.solution = self.solution[:-5]
+			self.move(["B'", "U'", "B"])
+			self.solution.extend(["B'", "U'", "B"])
+			condition = self.tryRotate(self.greenFirstTwoLayers)
+
+
 
 
 	def orangeContinued (self):
@@ -518,10 +542,10 @@ class SolveFirstTwoLayers(RubikCube):
 			condition = self.tryRotate(self.orangeFirstTwoLayers)
 		if condition :
 			# Cancels the changes made from previous attempt
-			self.move(['F', "U'", "F'"])
-			self.solution = self.solution[:-3]
-			self.move(['U', 'U', "B'", 'U', 'B'])
-			self.solution.extend(['U', 'U', "B'", 'U', 'B'])
+			self.move(['F', "U'", "U'", "F'"])
+			self.solution = self.solution[:-6]
+			self.move(['F', "U'", "F'", "B'", 'U', 'B'])
+			self.solution.extend(['F', "U'", "F'", "B'", 'U', 'B'])
 			condition = self.tryRotate(self.orangeFirstTwoLayers)
 
 	def blueContinued (self):
@@ -628,7 +652,7 @@ class LastLayer(RubikCube):
 			return ["F'", "L", "F", "R'", "F'", "L'", "F", "R"]
 		elif y[0]=="y" and y[2]=="y" and y[6]!="y" and y[8]!="y" and f[0]=="y":
 			return ["R", "R", "D", "R'", "U", "U", "R", "D'", "R'", "U", "U", "R'"]
-		elif y[0]!="y" and y[2]!="y" and y[6]!="y" and y[8]!="y" and f[2]=="y" and l[0]=="y":
+		elif y[0]!="y" and y[2]!="y" and y[6]!="y" and y[8]!="y" and f[2]=="y" and l[2]=="y":
 			return ["R","U","U","R","R","U'","R","R","U'","R","R","U","U", "R"]
 		elif y[0]!="y" and y[2]!="y" and y[6]!="y" and y[8]!="y" and r[2]=="y" and l[2]=="y":
 			return ["R", "U", "R'", "U", "R", "U'", "R'", "U", "R", "U", "U" , "R'"]
@@ -674,7 +698,7 @@ class LastLayer(RubikCube):
 			return ["R","U","R'","F'","R","U","R'","U'","R'","F","R","R","U'","R'","U'"]
 		elif f[0]==f[1] and b[1]==b[2] and l[0]==l[2] and r[1]==l[0]:
 			return ["R","U","R'","U'","R'","F","R","R","U'","R'","U'","R","U","R'","F'"]
-		elif l[0]==l[1] and l[1]==l[2] and r[0]==b[2] and r[2]==f[0]:
+		elif l[0]==l[1] and l[1]==l[2] and f[1]==f[4] and b[0]==b[4] :
 			return ["R'","U'","F'","R","U","R'","U'","R'","F","R","R","U'","R'","U'","R","U","R'","U","R"]
 
 	def pLLPartTwo(self):
@@ -684,7 +708,7 @@ class LastLayer(RubikCube):
 			return ["R'","U","R'","U'","B'","R'",'B','B',"U'","B'",'U',"B'",'R','B','R']
 		elif f[0]==f[1] and r[1]==r[2] and f[2]==l[1] and r[0]==l[2]:
 			return ["F","R","U'","R'","U'","R","U","R'","F'","R","U","R'","U'","R'","F","R","F'"]
-		elif l[0]==[2] and f[1]==f[2] and f[0]==b[1] and l[2]==r[1]:
+		elif l[0]==l[2] and f[1]==f[2] and f[0]==b[1] and l[2]==r[1]:
 			return ["R","R","U","R'","U","R'","U'","R","U'","R","R","D","U'","R'","U","R","D'","U"]
 		elif f[1]==f[2] and b[0]==b[2] and r[1]==b[0] and f[0]==l[1]:
 			return ["F'","U'","F","R","R","D","B'",'U','B',"U'",'B',"D'","R","R"]
@@ -700,7 +724,7 @@ class LastLayer(RubikCube):
 			return ["L'", "R'", "U","U","L","R","F","B","U","U","F'","B'"]
 		elif  f[1]==r[0] and r[0]==r[2] and l[1]==b[0] and b[0]==b[2]:
 			return ["R","B'","R'","B","F","R'","F","B'","R'","B","R","F","F"]
-		elif r[0]==l[2] and r[2]==l[0] and f[0]==b[2] and f[2]==b[0]:
+		elif r[0]==l[2] and r[2]==l[0] and f[0]==b[2] and f[2]==b[0] and f[0]==f[4]:
 			return ["F","R","B","R'","F'","R","L","F","L'","B'","L","F'","R'","L'"]
 		elif f[0] == f[1] and l[0] == l[1] and f[2] == b[1] and l[2] == r[1]:
 			return ["R","U'","R","R","F","F","U'","R","F","F","R'","U","F","F","R","R","U","R'"]
@@ -712,7 +736,6 @@ class LastLayer(RubikCube):
 		self.solution.extend(["yellow cross solved"])
 		self.tryRotate(self.allYellow)
 		self.solution.extend(["Yellow side solved"])
-
 		self.tryRotate(self.pLLPartOne)
 		self.tryRotate(self.pLLPartTwo)
 		self.tryRotate(self.pLLPartThree)
@@ -732,7 +755,8 @@ class LastLayer(RubikCube):
 # on the  first row is not in its correct permutation, if that happens the cube isn't solved
 # rest of stuff, is working for now
 randomScramble = []
-choices = ["R", "R'", "U", "U'", "B","B'", "F", "F'", "L", "L'"]
+choices = ["R",  "U",  "B", "F",  "L" ]
+anitchoices = ["R'","U'","B'","F'","L'"]
 for i in range(20):
 	randomScramble.append(random.choice(choices))
 
@@ -751,7 +775,7 @@ layerSolution = layer.getSolution()
 
 w, y, g, b, o, r = layer.getSides()
 yellow = LastLayer(g, b, w, y, r, o, layerSolution)
-yellow.finishCube()
+# yellow.finishCube()
 yellow.printCube()
 print (yellow.getSolution())
 
