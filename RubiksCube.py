@@ -379,7 +379,7 @@ class RubikCube:
 		elif list[0]=="B": self.moveB()
 		elif list[0]=="B'":self.moveBPrime()
 		# If a wrong move (not recognizable character) is inputted :
-		else: print ("Invalid move")
+		else: print ("Invalid move"+": "+str(list[0]))
 		self.move(list[1:])
 
 

@@ -79,34 +79,9 @@ def translateBack(list):
 
 # This class solves the cross for any cube permutation
 class SolveCross(RubikCube):
-	# Function that shortens the solution, As the AI isn't always smart
-	# it can include longer moves for doing the same task, this function
-	# cancels those moves and shortens the solution
+	# returns the solution list, is used for the next clases
 	def getSolution (self):
 		sol = self.solution
-		# Is used if the same move appears three consecutive time
-		# Turns them into one move with opposite direction
-		for i in range(2, len(sol)):
-			if sol[i]==sol[i-1] and sol[i-1]==sol[i-2]:
-				sol[i] = "X"
-				sol[i-1] = "X"
-				if "'" in sol[i]:
-					sol[i-2] = sol[i-2][:1]
-				else:
-					sol[i-2] = sol[i-2] + "'"
-		# Is used when the same move appears four times, deletes them
-		for i in range (3, len(sol)):
-			if sol[i]==sol[i-1] and sol[i-1]==sol[i-2] and sol[i-2]==sol[i-3]:
-				sol[i], sol[i-1], sol[i-2], sol[i-3] = "X", "X", "X", "X"
-
-		# Is used when a move and their opposite direction move appear
-		# consecutively, deletes them
-		for i in range(1, len(sol)):
-			if sol[i]==sol[i-1]+"'" or sol[i-1]==sol[i]+"'":
-				sol[i], sol[i-1] = "X", "X"
-		# "Deleted" moves were converted into X's before, now will be deleted
-		while "X" in sol:
-			sol.remove("X")
 		return sol
 
 	# Has the solution if the white green cubicle for cross
@@ -242,6 +217,7 @@ class SolveCross(RubikCube):
 		for i in [x,y,z]:
 			if i != []:
 				translation = translateBack(i)
+				print (translation)
 				self.solution.extend(translation)
 				self.move(translation)
 
@@ -267,29 +243,6 @@ class SolveFirstTwoLayers(RubikCube):
 
 	def getSolution (self):
 		sol = self.solution
-		# Is used if the same move appears three consecutive time
-		# Turns them into one move with opposite direction
-		for i in range(2, len(sol)):
-			if sol[i]==sol[i-1] and sol[i-1]==sol[i-2]:
-				sol[i] = "X"
-				sol[i-1] = "X"
-				if "'" in sol[i]:
-					sol[i-2] = sol[i-2][:1]
-				else:
-					sol[i-2] = sol[i-2] + "'"
-		# Is used when the same move appears four times, deletes them
-		for i in range (3, len(sol)):
-			if sol[i]==sol[i-1] and sol[i-1]==sol[i-2] and sol[i-2]==sol[i-3]:
-				sol[i], sol[i-1], sol[i-2], sol[i-3] = "X", "X", "X", "X"
-
-		# Is used when a move and their opposite direction move appear
-		# consecutively, deletes them
-		for i in range(1, len(sol)):
-			if sol[i]==sol[i-1]+"'" or sol[i-1]==sol[i]+"'":
-				sol[i], sol[i-1] = "X", "X"
-		# "Deleted" moves were converted into X's before, now will be deleted
-		while "X" in sol:
-			sol.remove("X")
 		return sol
 
 
@@ -392,6 +345,7 @@ class SolveFirstTwoLayers(RubikCube):
 		elif f[5]==rC and r[3]==fC and f[8]=="w" and r[6]==fC and w[2]==rC:
 			return ["R", "U'", "R'", "U", "F'", "U'", "F", "U'", "F'", "U'", "F"]
 
+
 	def greenFirstTwoLayers(self):
 		w, y, g, b = self.wSide, self.ySide, self.gSide, self.bSide
 		r, o = self.rSide, self.oSide
@@ -469,6 +423,7 @@ class SolveFirstTwoLayers(RubikCube):
 			self.move(["U"]);self.solution = self.solution[:-1]
 			return True
 
+	# Basically tries out the different place the two pieces for f2l can be at
 	def greenContinued(self):
 		condition = self.tryRotate(self.greenFirstTwoLayers)
 		if condition :
@@ -505,14 +460,14 @@ class SolveFirstTwoLayers(RubikCube):
 		if condition :
 			self.move(move); self.solution.extend(move)
 			condition = self.tryRotate(self.greenFirstTwoLayers)
-		if condition:
+		if condition :
 			# Cancels the changes made from previous attempt
 			# And tries out a combination of left and right shifting
-			self.move(["L", "U", "U", "L'"])
-			self.solution = self.solution[:-6]
-			self.move(["R'", "U", "R", "L", "U", "U", "L'"])
-			self.solution.extend(["R'", "U", "R", "L", "U", "U", "L'"])
+			self.move(["L", "U", "U", "L'"]);self.solution = self.solution[:-6]
+			self.move(["R'", "U", "R", "L", "U","U", "L'"])
+			self.solution.extend(["R'", "U", "R", "L", "U","U", "L'"])
 			condition = self.tryRotate(self.greenFirstTwoLayers)
+
 
 
 
@@ -535,7 +490,7 @@ class SolveFirstTwoLayers(RubikCube):
 		if condition :
 			self.move(move); self.solution.extend(move)
 			condition = self.tryRotate(self.orangeFirstTwoLayers)
-		if condition:
+		if condition :
 			# Cancels the changes made from previous attempt
 			self.move(['F', "U'", "U'", "F'"])
 			self.solution = self.solution[:-6]
@@ -580,6 +535,10 @@ class SolveFirstTwoLayers(RubikCube):
 class LastLayer(RubikCube):
 	def getSolution (self):
 		sol = self.solution
+		# Is used when the same move appears four times, deletes them
+		for i in range(3, len(sol)):
+			if sol[i] == sol[i - 1] and sol[i - 1] == sol[i - 2] and sol[i - 2] == sol[i - 3]:
+				sol[i], sol[i - 1], sol[i - 2], sol[i - 3] = "X", "X", "X", "X"
 		# Is used if the same move appears three consecutive time
 		# Turns them into one move with opposite direction
 		for i in range(2, len(sol)):
@@ -590,17 +549,11 @@ class LastLayer(RubikCube):
 					sol[i-2] = sol[i-2][:1]
 				else:
 					sol[i-2] = sol[i-2] + "'"
-		# Is used when the same move appears four times, deletes them
-		for i in range (3, len(sol)):
-			if sol[i]==sol[i-1] and sol[i-1]==sol[i-2] and sol[i-2]==sol[i-3]:
-				sol[i], sol[i-1], sol[i-2], sol[i-3] = "X", "X", "X", "X"
-
 		# Is used when a move and their opposite direction move appear
 		# consecutively, deletes them
 		for i in range(1, len(sol)):
 			if sol[i]==sol[i-1]+"'" or sol[i-1]==sol[i]+"'":
 				sol[i], sol[i-1] = "X", "X"
-
 		for i in range(1, len(sol)):
 			if sol[i]==sol[i-1]:
 				sol[i], sol[i-1] =  "X", sol[i]+"2"
@@ -609,6 +562,8 @@ class LastLayer(RubikCube):
 			sol.remove("X")
 		while "X2" in sol:
 			sol.remove("X2")
+		while "X'" in sol:
+			sol.remove("X'")
 		return sol
 
 	def yellowCross(self):
@@ -693,7 +648,7 @@ class LastLayer(RubikCube):
 			return ["R","U","R'","F'","R","U","R'","U'","R'","F","R","R","U'","R'","U'"]
 		elif f[0]==f[1] and b[1]==b[2] and l[0]==l[2] and r[1]==l[0]:
 			return ["R","U","R'","U'","R'","F","R","R","U'","R'","U'","R","U","R'","F'"]
-		elif l[0] == l[1] and l[1] == l[2] and f[0] == b[1] and f[1] == b[2] and f[2] == r[1] and b[0] == r[1]:
+		elif l[0]==l[1] and l[1]==l[2] and f[0]==b[1] and f[1]==b[2] and f[2]==r[1] and b[0]==r[1] :
 			return ["R'","U'","F'","R","U","R'","U'","R'","F","R","R","U'","R'","U'","R","U","R'","U","R"]
 
 	def pLLPartTwo(self):
@@ -719,7 +674,7 @@ class LastLayer(RubikCube):
 			return ["L'", "R'", "U","U","L","R","F","B","U","U","F'","B'"]
 		elif  f[1]==r[0] and r[0]==r[2] and l[1]==b[0] and b[0]==b[2]:
 			return ["R","B'","R'","B","F","R'","F","B'","R'","B","R","F","F"]
-		elif r[0]==l[2] and r[2]==l[0] and f[0]==b[2] and f[2]==b[0] and l[2] ==b[1]:
+		elif r[0]==l[2] and r[2]==l[0] and f[0]==b[2] and f[2]==b[0] and l[2]==b[1]:
 			return ["F","R","B","R'","F'","R","L","F","L'","B'","L","F'","R'","L'"]
 		elif f[0] == f[1] and l[0] == l[1] and f[2] == b[1] and l[2] == r[1]:
 			return ["R","U'","R","R","F","F","U'","R","F","F","R'","U","F","F","R","R","U","R'"]
@@ -755,12 +710,10 @@ anitchoices = ["R'","U'","B'","F'","L'"]
 for i in range(20):
 	randomScramble.append(random.choice(choices))
 
-
-print (randomScramble)
 cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
-cross.move(randomScramble)
+cross.move(['B', 'L', 'U', 'B', 'F', 'B', 'B', 'L', 'F', 'F', 'B', 'F', 'R', 'B', 'R', 'L', 'L', 'B', 'R', 'B'])
+# cross.move(['D', 'D', "B'", "D'", 'D', "R'", "D'", 'D', "L'", 'D', 'D', 'U', "L'", 'B', 'L'])
 cross.solveAllSides()
-
 w, y, g, b, o, r = cross.getSides()
 #
 crossSolution = cross.getSolution()
@@ -773,49 +726,3 @@ yellow = LastLayer(g, b, w, y, r, o, layerSolution)
 yellow.finishCube()
 yellow.printCube()
 print (yellow.getSolution())
-
-# randomScramble = []
-# count = 0
-# list = [[g,g,g,g,g,g,g,g,g], [b,b,b,b,b,b,b,b,b],[w,w,w,w,w,w,w,w,w],[y,y,y,y,y,y,y,y,y],[r,r,r,r,r,r,r,r,r],[o,o,o,o,o,o,o,o,o]]
-# answer = [[g,g,g,g,g,g,g,g,g], [b,b,b,b,b,b,b,b,b],[w,w,w,w,w,w,w,w,w],[y,y,y,y,y,y,y,y,y],[r,r,r,r,r,r,r,r,r],[o,o,o,o,o,o,o,o,o]]
-# while  list==answer and count<10000:
-# 	randomScramble = []
-# 	cross, layer, yellow = 0,0,0
-# 	for i in range(20):
-# 		randomScramble.append(random.choice(choices))
-# 	cross = SolveCross(gSide, bSide, wSide, ySide, rSide, oSide)
-# 	cross.move(randomScramble)
-# 	cross.solveAllSides()
-# 	w, y, g, b, o, r = cross.getSides()
-# 	crossSolution = cross.getSolution()
-# 	layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution)
-# 	layer.solveTwoLayers()
-# 	layerSolution = layer.getSolution()
-# 	w, y, g, b, o, r = layer.getSides()
-# 	yellow = LastLayer(g, b, w, y, r, o, layerSolution)
-# 	yellow.finishCube()
-# 	answer[0], answer[1], answer[2]=yellow.gSide, yellow.bSide, yellow.wSide
-# 	answer[3], answer[4], answer[5] = yellow.ySide, yellow.rSide, yellow.oSide
-# 	del cross
-# 	del layer
-# 	del yellow
-# 	count+=1
-# 	if count%100==0:
-# 		print (count)
-# print (count)
-# print ("Alhamdulilah")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
