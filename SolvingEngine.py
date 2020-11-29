@@ -84,29 +84,6 @@ class SolveCross(RubikCube):
 	# cancels those moves and shortens the solution
 	def getSolution (self):
 		sol = self.solution
-		# Is used if the same move appears three consecutive time
-		# Turns them into one move with opposite direction
-		for i in range(2, len(sol)):
-			if sol[i]==sol[i-1] and sol[i-1]==sol[i-2]:
-				sol[i] = "X"
-				sol[i-1] = "X"
-				if "'" in sol[i]:
-					sol[i-2] = sol[i-2][:1]
-				else:
-					sol[i-2] = sol[i-2] + "'"
-		# Is used when the same move appears four times, deletes them
-		for i in range (3, len(sol)):
-			if sol[i]==sol[i-1] and sol[i-1]==sol[i-2] and sol[i-2]==sol[i-3]:
-				sol[i], sol[i-1], sol[i-2], sol[i-3] = "X", "X", "X", "X"
-
-		# Is used when a move and their opposite direction move appear
-		# consecutively, deletes them
-		for i in range(1, len(sol)):
-			if sol[i]==sol[i-1]+"'" or sol[i-1]==sol[i]+"'":
-				sol[i], sol[i-1] = "X", "X"
-		# "Deleted" moves were converted into X's before, now will be deleted
-		while "X" in sol:
-			sol.remove("X")
 		return sol
 
 	# Has the solution if the white green cubicle for cross
@@ -726,7 +703,7 @@ class LastLayer(RubikCube):
 		elif f[1] == f[2] and l[2] == l[1] and f[0] == b[1] and r[0] == l[1]:
 			return ["R'", "U", "R","R","B","B","U","R'","B","B","R","U'","B","B","R","R","U'","R"]
 
-	def finishCube(self):
+	def finishlastLayer(self):
 		self.yellowCross()
 		self.solution.extend(["yellow cross solved"])
 		self.tryRotate(self.allYellow)
@@ -745,65 +722,68 @@ class LastLayer(RubikCube):
 			self.move(["U'"])
 
 
+
 # This part is used for testing
 # Note, there still is a permutation where the third white block
 # on the  first row is not in its correct permutation, if that happens the cube isn't solved
 # rest of stuff, is working for now
 randomScramble = []
 choices = ["R",  "U",  "B", "F",  "L" ]
-anitchoices = ["R'","U'","B'","F'","L'"]
-for i in range(20):
-	randomScramble.append(random.choice(choices))
-
-
-print (randomScramble)
-cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
-cross.move(randomScramble)
-cross.solveAllSides()
-
-w, y, g, b, o, r = cross.getSides()
+# anitchoices = ["R'","U'","B'","F'","L'"]
+# for i in range(20):
+# 	randomScramble.append(random.choice(choices))
 #
-crossSolution = cross.getSolution()
-layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution )
-layer.solveTwoLayers()
-layerSolution = layer.getSolution()
-
-w, y, g, b, o, r = layer.getSides()
-yellow = LastLayer(g, b, w, y, r, o, layerSolution)
-yellow.finishCube()
-yellow.printCube()
-print (yellow.getSolution())
+#
+# print (randomScramble)
+# cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
+# cross.move(randomScramble)
+# cross.solveAllSides()
+#
+# w, y, g, b, o, r = cross.getSides()
+# #
+# crossSolution = cross.getSolution()
+# layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution )
+# layer.solveTwoLayers()
+# layerSolution = layer.getSolution()
+#
+# w, y, g, b, o, r = layer.getSides()
+# yellow = LastLayer(g, b, w, y, r, o, layerSolution)
+# yellow.finishCube()
+# yellow.printCube()
+# print (yellow.getSolution())
 
 # randomScramble = []
-# count = 0
-# list = [[g,g,g,g,g,g,g,g,g], [b,b,b,b,b,b,b,b,b],[w,w,w,w,w,w,w,w,w],[y,y,y,y,y,y,y,y,y],[r,r,r,r,r,r,r,r,r],[o,o,o,o,o,o,o,o,o]]
-# answer = [[g,g,g,g,g,g,g,g,g], [b,b,b,b,b,b,b,b,b],[w,w,w,w,w,w,w,w,w],[y,y,y,y,y,y,y,y,y],[r,r,r,r,r,r,r,r,r],[o,o,o,o,o,o,o,o,o]]
-# while  list==answer and count<10000:
-# 	randomScramble = []
-# 	cross, layer, yellow = 0,0,0
-# 	for i in range(20):
-# 		randomScramble.append(random.choice(choices))
-# 	cross = SolveCross(gSide, bSide, wSide, ySide, rSide, oSide)
-# 	cross.move(randomScramble)
-# 	cross.solveAllSides()
-# 	w, y, g, b, o, r = cross.getSides()
-# 	crossSolution = cross.getSolution()
-# 	layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution)
-# 	layer.solveTwoLayers()
-# 	layerSolution = layer.getSolution()
-# 	w, y, g, b, o, r = layer.getSides()
-# 	yellow = LastLayer(g, b, w, y, r, o, layerSolution)
-# 	yellow.finishCube()
-# 	answer[0], answer[1], answer[2]=yellow.gSide, yellow.bSide, yellow.wSide
-# 	answer[3], answer[4], answer[5] = yellow.ySide, yellow.rSide, yellow.oSide
-# 	del cross
-# 	del layer
-# 	del yellow
-# 	count+=1
-# 	if count%100==0:
-# 		print (count)
-# print (count)
-# print ("Alhamdulilah")
+count = 0
+list = [[g,g,g,g,g,g,g,g,g], [b,b,b,b,b,b,b,b,b],[w,w,w,w,w,w,w,w,w],[y,y,y,y,y,y,y,y,y],[r,r,r,r,r,r,r,r,r],[o,o,o,o,o,o,o,o,o]]
+answer = [[g,g,g,g,g,g,g,g,g], [b,b,b,b,b,b,b,b,b],[w,w,w,w,w,w,w,w,w],[y,y,y,y,y,y,y,y,y],[r,r,r,r,r,r,r,r,r],[o,o,o,o,o,o,o,o,o]]
+while  list==answer and count<50:
+	randomScramble = []
+	cross, layer, yellow = 0,0,0
+	for i in range(20):
+		randomScramble.append(random.choice(choices))
+	cross = SolveCross(gSide, bSide, wSide, ySide, rSide, oSide)
+	cross.move(randomScramble)
+	cross.solveAllSides()
+	w, y, g, b, o, r = cross.getSides()
+	crossSolution = cross.getSolution()
+	layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution)
+	layer.solveTwoLayers()
+	layerSolution = layer.getSolution()
+	w, y, g, b, o, r = layer.getSides()
+	yellow = LastLayer(g, b, w, y, r, o, layerSolution)
+
+	yellow.finishCube()
+	print (yellow.getSolution())
+	yellow.solution = []
+	answer[0], answer[1], answer[2]=yellow.gSide, yellow.bSide, yellow.wSide
+	answer[3], answer[4], answer[5] = yellow.ySide, yellow.rSide, yellow.oSide
+	del cross
+	del layer
+	del yellow
+	count+=1
+	if count%100==0:
+		print (count)
+
 
 
 

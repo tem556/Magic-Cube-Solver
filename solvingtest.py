@@ -2,24 +2,24 @@ from RubiksCube import *
 import random
 w = "w"; y = "y"; b = "b"; g = "g"; r = "r"; o = "o"
 
-wSide = [w, w, w,
-		 w, w, w,
-		 w, w, w]
-ySide = [y, y, y,
-		 y, y, y,
-		 y, y, y]
-bSide = [b, b, b,
-		 b, b, b,
-		 b, b, b]
-gSide = [g, g, g,
-		 g, g, g,
-		 g, g, g]
-rSide = [r, r, r,
-		 r, r, r,
-		 r, r, r]
-oSide = [o, o, o,
-		 o, o, o,
-		 o, o, o]
+wSide = [o, o, b,
+		 y, w, y,
+		 g, b, w]
+ySide = [r, b, w,
+		 y, y, g,
+		 w, r, y]
+bSide = [b, o, y,
+		 b, b, y,
+		 b, r, y]
+gSide = [r, w, r,
+		 r, g, o,
+		 g, w, o]
+rSide = [b, r, g,
+		 o, r, g,
+		 o, g, w]
+oSide = [g, w, r,
+		 g, o, w,
+		 y, b, o]
 
 # Helper functions, used for solving the cube
 # Function that translates the instructions for solving cube
@@ -711,7 +711,7 @@ for i in range(20):
 	randomScramble.append(random.choice(choices))
 
 cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
-cross.move(['B', 'L', 'U', 'B', 'F', 'B', 'B', 'L', 'F', 'F', 'B', 'F', 'R', 'B', 'R', 'L', 'L', 'B', 'R', 'B'])
+# cross.move(['B', 'L', 'U', 'B', 'F', 'B', 'B', 'L', 'F', 'F', 'B', 'F', 'R', 'B', 'R', 'L', 'L', 'B', 'R', 'B'])
 # cross.move(['D', 'D', "B'", "D'", 'D', "R'", "D'", 'D', "L'", 'D', 'D', 'U', "L'", 'B', 'L'])
 cross.solveAllSides()
 w, y, g, b, o, r = cross.getSides()
