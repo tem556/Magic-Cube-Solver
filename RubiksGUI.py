@@ -15,6 +15,7 @@ class GUI:
 		self.imgProc = GetColors()
 		self.captureCondition = True
 		self.gSide= []
+		self.solutionIndex = -1
 	# Creates the top portion of the window
 	def topScreen(self):
 		root = self.window
@@ -51,6 +52,7 @@ class GUI:
 		yellow = LastLayer(g, b, w, y, r, o, layerSolution)
 		yellow.finishLastLayer()
 		self.solution  = yellow.getSolution()
+		print (self.solution)
 
 
 	# Gets the colors and the solution for the cube
@@ -61,8 +63,8 @@ class GUI:
 			cSides = self.imgProc.getColor()
 			self.gSide, self.bSide, self.wSide = cSides[0][:], cSides[1][:], cSides[2][:]
 			self.ySide, self.rSide, self.oSide = cSides[3][:], cSides[4][:], cSides[5][:]
-			gSide, oSide, bSide = self.gSide, self.oSide, self.bSide
-			rSide, wSide, ySide = self.rSide, self.wSide, self.ySide
+			gSide, oSide, bSide = self.gSide[:], self.oSide[:], self.bSide[:]
+			rSide, wSide, ySide = self.rSide[:], self.wSide[:], self.ySide[:]
 			self.unsolvedCube = RubikCube(gSide, bSide, wSide, ySide, rSide, oSide)
 			self.getSolution()
 			self.captureCondition = False
@@ -149,17 +151,45 @@ class GUI:
 			root = self.window
 			solutionWindow = tk.Toplevel(root, height=700, width=1000)
 			self.cube2D = tk.Canvas(solutionWindow, height=650, width=1000)
-			self.createSide((300,50), self.imgProc.ySide)
-			self.createSide((300,240), self.imgProc.gSide)
-			self.createSide((300,430), self.imgProc.wSide)
-			self.createSide((110,240), self.imgProc.rSide)
-			self.createSide((490,240), self.imgProc.oSide)
-			self.createSide((680,240), self.imgProc.bSide)
+			self.createSide((300,40), self.imgProc.ySide)
+			self.createSide((300,230), self.imgProc.gSide)
+			self.createSide((300,420), self.imgProc.wSide)
+			self.createSide((110,230), self.imgProc.rSide)
+			self.createSide((490,230), self.imgProc.oSide)
+			self.createSide((680,230), self.imgProc.bSide)
 			self.cube2D.pack()
-			button = tk.Button(solutionWindow,text="click here ig")
-			text = tk.Label(solutionWindow, text=self.solution[0])
-			text.pack()
-			button.pack()
+			button = tk.Button(solutionWindow,text="Next Step", height=2)
+			button["command"]=self.nextStep
+			button2= tk.Button(solutionWindow,text="Previous Step", height=2)
+			self.text = tk.Text(solutionWindow, height=2, width=10)
+			self.text.insert("end", "Start")
+			self.text.config(state="disabled")
+			self.text.place(relx=0.5, rely=0.93)
+			button.place(relx=0.7, rely=0.93)
+			button2.place(relx=0.25, rely=0.93)
+
+	def nextStep(self):
+		if self.solutionIndex!=len(self.solution)-1:
+			self.solutionIndex+=1
+			self.unsolvedCube.move([self.solution[self.solutionIndex]])
+			gSide, bSide = self.unsolvedCube.gSide, self.unsolvedCube.bSide
+			oSide, rSide = self.unsolvedCube.oSide, self.unsolvedCube.rSide
+			wSide, ySide = self.unsolvedCube.wSide, self.unsolvedCube.ySide
+			self.cube2D.delete("all")
+			self.createSide((300, 40), ySide)
+			self.createSide((300, 230), gSide)
+			self.createSide((300, 420), wSide)
+			self.createSide((110, 230), rSide)
+			self.createSide((490, 230), oSide)
+			self.createSide((680, 230), bSide)
+			self.text.config(state="normal")
+			self.text.delete(1.0,"end")
+			self.text.insert("end", self.solution[self.solutionIndex])
+			self.text.config(state="disabled")
+		else:
+			messagebox.showinfo("Finished", "You have finished solving the cube")
+
+
 
 
 
