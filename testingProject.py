@@ -1,40 +1,24 @@
-import cv2
+import tkinter as tk
 
-cap = cv2.VideoCapture(1)
+root = tk.Tk()
+newWindow = tk.Toplevel(root)
+newWindow.title("Solution")
+cube2D = tk.Canvas(newWindow, height = 700, width = 1000)
+cube2D.create_rectangle((300,50),(480,230) ,fill="yellow")
+cube2D.create_rectangle((300,240),(480,420) ,fill="green")
+cube2D.create_rectangle((300,430),(480,610) ,fill="white")
 
-while (True):
+cube2D.create_rectangle((110,240),(290,420) ,fill="red")
+cube2D.create_rectangle((490,240),(670,420) ,fill="orange")
+cube2D.create_rectangle((680,240),(860,420) ,fill="blue")
 
-	# Capture frames in the video
-	ret, frame = cap.read()
+# def createSide(startCrd, endCrd, colorList):
 
-	# describe the type of font
-	# to be used.
-	font = cv2.FONT_HERSHEY_SIMPLEX
 
-	# Use putText() method for
-	# inserting text on video
-	cv2.putText(frame,
-	            'Faces the screen: Green',
-	            (0, 50),
-	            font, 1,
-	            (0,0,0),
-	            2)
-	cv2.putText(frame,
-	            'On top: Yellow',
-	            (0, 100),
-	            font, 1,
-	            (0, 0, 0),
-	            2)
 
-	# Display the resulting frame
-	cv2.imshow('video', frame)
 
-	# creating 'q' as the quit
-	# button for the video
-	if cv2.waitKey(1) & 0xFF == ord('q'):
-		break
 
-# release the cap object
-cap.release()
-# close all windows
-cv2.destroyAllWindows()
+
+
+cube2D.pack()
+root.mainloop()

@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 
 # The image processor will start with the green side facing the camera
 # and yellow top, then move to the orange side, the blue, then red
@@ -7,10 +6,12 @@ import numpy as np
 # Yellow with blue on top
 
 
-class ImageProcessing:
+class GetColors:
 	def __init__(self):
 		# Access the live video through the 0 or 1 channel
-		self.capture = cv2.VideoCapture(1)
+		self.capture = cv2.VideoCapture(0)
+		self.gSide, self.oSide, self.bSide = [], [], []
+		self.rSide, self.wSide, self.ySide = [], [], []
 
 	# Add the lines and the circles to the image
 	def addRfrnce (self):
@@ -91,6 +92,8 @@ class ImageProcessing:
 				if cv2.waitKey(1) & 0xFF == ord("p"):
 					self.colorList.append(self.getColors(img))
 					condition = False
+		cv2.destroyAllWindows()
+		# If the user decides to capture again
 
 
 
@@ -142,7 +145,15 @@ class ImageProcessing:
 		self.gSide, self.oSide, self.bSide = gSide, oSide, bSide
 		self.rSide, self.wSide, self.ySide = rSide, wSide, ySide
 
+	def getColor(self):
+		gSide, oSide, bSide = self.gSide, self.oSide, self.bSide
+		rSide, wSide, ySide = self.rSide, self.wSide, self.ySide
+		if ySide!=[]:
+			return (gSide, bSide, wSide, ySide, rSide, oSide)
+		else:
+			return False
 
+	# Can be used for testing
 	def getSide(self, side):
 		cSide = side
 		return (cSide[0]+" "+cSide[1]+" "+cSide[2]+"\n"+
@@ -164,14 +175,16 @@ class ImageProcessing:
 		       " "*5+"|"+w[3]+" "+w[4]+" "+w[5]+"\n"+
 		       " "*5+"|"+w[6]+" "+w[7]+" "+w[8]+"\n")
 
+	def finalStep(self):
+		self.getAllColors()
+		self.convertColors()
+		self.convertList()
 
 
 
-cubeProcess = ImageProcessing()
-cubeProcess.getAllColors()
-cubeProcess.convertColors()
-cubeProcess.convertList()
-cubeProcess.printCube()
+
+cubeProcess = GetColors()
+
 
 # Takes a nested list with numbers and converts it into colors
 # def convertColors(list):

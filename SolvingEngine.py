@@ -1,25 +1,4 @@
 from RubiksCube import *
-import random
-w = "w"; y = "y"; b = "b"; g = "g"; r = "r"; o = "o"
-
-wSide = [w, w, w,
-		 w, w, w,
-		 w, w, w]
-ySide = [y, y, y,
-		 y, y, y,
-		 y, y, y]
-bSide = [b, b, b,
-		 b, b, b,
-		 b, b, b]
-gSide = [g, g, g,
-		 g, g, g,
-		 g, g, g]
-rSide = [r, r, r,
-		 r, r, r,
-		 r, r, r]
-oSide = [o, o, o,
-		 o, o, o,
-		 o, o, o]
 
 # Helper functions, used for solving the cube
 # Function that translates the instructions for solving cube
@@ -227,11 +206,10 @@ class SolveCross(RubikCube):
 		self.redCubicle()
 		self.orangeCubicle()
 		self.blueCubicle()
-		self.solution.extend(["Cross Solved"])
 
 
 	def getSides(self):
-		return (wSide, ySide, gSide, bSide, oSide, rSide)
+		return (self.wSide, self.ySide, self.gSide, self.bSide, self.oSide, self.rSide)
 
 
 
@@ -536,16 +514,12 @@ class SolveFirstTwoLayers(RubikCube):
 		condition = self.tryRotate(self.redFirstTwoLayers)
 	def solveTwoLayers(self):
 		self.greenContinued()
-		self.solution.extend(["green done"])
 		self.orangeContinued()
-		self.solution.extend(["orange done"])
 		self.blueContinued()
-		self.solution.extend(["blue done"])
 		self.redContinued()
-		self.solution.extend(["red done"])
 
 	def getSides(self):
-		return (wSide, ySide, gSide, bSide, oSide, rSide)
+		return (self.wSide, self.ySide, self.gSide, self.bSide, self.oSide, self.rSide)
 
 
 
@@ -703,11 +677,9 @@ class LastLayer(RubikCube):
 		elif f[1] == f[2] and l[2] == l[1] and f[0] == b[1] and r[0] == l[1]:
 			return ["R'", "U", "R","R","B","B","U","R'","B","B","R","U'","B","B","R","R","U'","R"]
 
-	def finishlastLayer(self):
+	def finishLastLayer(self):
 		self.yellowCross()
-		self.solution.extend(["yellow cross solved"])
 		self.tryRotate(self.allYellow)
-		self.solution.extend(["Yellow side solved"])
 		self.tryRotate(self.pLLPartOne)
 		self.tryRotate(self.pLLPartTwo)
 		self.tryRotate(self.pLLPartThree)
@@ -723,66 +695,13 @@ class LastLayer(RubikCube):
 
 
 
-# This part is used for testing
-# Note, there still is a permutation where the third white block
-# on the  first row is not in its correct permutation, if that happens the cube isn't solved
-# rest of stuff, is working for now
-randomScramble = []
-choices = ["R",  "U",  "B", "F",  "L" ]
-# anitchoices = ["R'","U'","B'","F'","L'"]
-# for i in range(20):
-# 	randomScramble.append(random.choice(choices))
-#
-#
-# print (randomScramble)
-# cross = SolveCross( gSide,bSide,wSide, ySide,  rSide, oSide)
-# cross.move(randomScramble)
-# cross.solveAllSides()
-#
-# w, y, g, b, o, r = cross.getSides()
-# #
-# crossSolution = cross.getSolution()
-# layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution )
-# layer.solveTwoLayers()
-# layerSolution = layer.getSolution()
-#
-# w, y, g, b, o, r = layer.getSides()
-# yellow = LastLayer(g, b, w, y, r, o, layerSolution)
-# yellow.finishCube()
-# yellow.printCube()
-# print (yellow.getSolution())
 
-# randomScramble = []
-count = 0
-list = [[g,g,g,g,g,g,g,g,g], [b,b,b,b,b,b,b,b,b],[w,w,w,w,w,w,w,w,w],[y,y,y,y,y,y,y,y,y],[r,r,r,r,r,r,r,r,r],[o,o,o,o,o,o,o,o,o]]
-answer = [[g,g,g,g,g,g,g,g,g], [b,b,b,b,b,b,b,b,b],[w,w,w,w,w,w,w,w,w],[y,y,y,y,y,y,y,y,y],[r,r,r,r,r,r,r,r,r],[o,o,o,o,o,o,o,o,o]]
-while  list==answer and count<50:
-	randomScramble = []
-	cross, layer, yellow = 0,0,0
-	for i in range(20):
-		randomScramble.append(random.choice(choices))
-	cross = SolveCross(gSide, bSide, wSide, ySide, rSide, oSide)
-	cross.move(randomScramble)
-	cross.solveAllSides()
-	w, y, g, b, o, r = cross.getSides()
-	crossSolution = cross.getSolution()
-	layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution)
-	layer.solveTwoLayers()
-	layerSolution = layer.getSolution()
-	w, y, g, b, o, r = layer.getSides()
-	yellow = LastLayer(g, b, w, y, r, o, layerSolution)
 
-	yellow.finishCube()
-	print (yellow.getSolution())
-	yellow.solution = []
-	answer[0], answer[1], answer[2]=yellow.gSide, yellow.bSide, yellow.wSide
-	answer[3], answer[4], answer[5] = yellow.ySide, yellow.rSide, yellow.oSide
-	del cross
-	del layer
-	del yellow
-	count+=1
-	if count%100==0:
-		print (count)
+
+
+
+
+
 
 
 

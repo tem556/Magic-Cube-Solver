@@ -1,6 +1,6 @@
 # Has the Rubik's Cube class that makes a rubik's cube and allows
 # it to move
-g = "g"; b = "b"; w = "w"; y = "y"; r = "r"; o = "o"
+# g = "g"; b = "b"; w = "w"; y = "y"; r = "r"; o = "o"
 # This is what a Rubik's Cube will look like for our program
 
 # gSide = [g, g, g,
