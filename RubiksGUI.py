@@ -41,17 +41,17 @@ class GUI:
 	def getSolution(self):
 		gSide, oSide, bSide = self.gSide, self.oSide, self.bSide
 		rSide, wSide, ySide = self.rSide, self.wSide, self.ySide
-		cross = SolveCross(gSide, bSide, wSide, ySide, rSide, oSide)
+		cross = SolveCross(gSide, bSide, wSide, ySide, rSide, oSide, [])
 		cross.solveAllSides()
 		w, y, g, b, o, r = cross.getSides()
 		crossSolution = cross.getSolution()
-		layer = SolveFirstTwoLayers(g, b, w, y, r, o, crossSolution)
+		layer = SolveFirstTwoLayers(g, b, w, y, r, o, [])
 		layer.solveTwoLayers()
 		layerSolution = layer.getSolution()
 		w, y, g, b, o, r = layer.getSides()
-		yellow = LastLayer(g, b, w, y, r, o, layerSolution)
+		yellow = LastLayer(g, b, w, y, r, o, [])
 		yellow.finishLastLayer()
-		self.solution  = yellow.getSolution()
+		self.solution  = crossSolution+layerSolution+yellow.getSolution()
 		print (self.solution)
 
 
@@ -70,6 +70,8 @@ class GUI:
 			self.captureCondition = False
 		elif messagebox.askyesno("Verify", message):
 			self.captureCondition=True
+			self.solution=[]
+			self.solutionIndex=-1
 			self.imgProcessing()
 
 	def getInstructions(self):
@@ -140,6 +142,9 @@ class GUI:
 		self.cube2D.create_rectangle((sCrdX, sCrdY+120), (sCrdX+60, sCrdY+180),fill=colorList[6])
 		self.cube2D.create_rectangle((sCrdX+60, sCrdY+120), (sCrdX+120, sCrdY+180), fill=colorList[7])
 		self.cube2D.create_rectangle((sCrdX+120, sCrdY+120), (sCrdX+180, sCrdY+180), fill=colorList[8])
+		text = "Please position the cube such that the green side"
+		text+=" is facing you and the yellow side is facing upwards"
+		self.cube2D.create_text(450,20, text=text, font=self.textFont3 )
 
 
 	# Is executed when the solution button is pressed
@@ -151,22 +156,20 @@ class GUI:
 			root = self.window
 			solutionWindow = tk.Toplevel(root, height=700, width=1000)
 			self.cube2D = tk.Canvas(solutionWindow, height=650, width=1000)
-			self.createSide((300,40), self.imgProc.ySide)
-			self.createSide((300,230), self.imgProc.gSide)
-			self.createSide((300,420), self.imgProc.wSide)
-			self.createSide((110,230), self.imgProc.rSide)
-			self.createSide((490,230), self.imgProc.oSide)
-			self.createSide((680,230), self.imgProc.bSide)
+			self.createSide((300,60), self.imgProc.ySide)
+			self.createSide((300,250), self.imgProc.gSide)
+			self.createSide((300,440), self.imgProc.wSide)
+			self.createSide((110,250), self.imgProc.rSide)
+			self.createSide((490,250), self.imgProc.oSide)
+			self.createSide((680,250), self.imgProc.bSide)
 			self.cube2D.pack()
 			button = tk.Button(solutionWindow,text="Next Step", height=2)
 			button["command"]=self.nextStep
-			button2= tk.Button(solutionWindow,text="Previous Step", height=2)
 			self.text = tk.Text(solutionWindow, height=2, width=10)
 			self.text.insert("end", "Start")
 			self.text.config(state="disabled")
 			self.text.place(relx=0.5, rely=0.93)
 			button.place(relx=0.7, rely=0.93)
-			button2.place(relx=0.25, rely=0.93)
 
 	def nextStep(self):
 		if self.solutionIndex!=len(self.solution)-1:
@@ -176,18 +179,21 @@ class GUI:
 			oSide, rSide = self.unsolvedCube.oSide, self.unsolvedCube.rSide
 			wSide, ySide = self.unsolvedCube.wSide, self.unsolvedCube.ySide
 			self.cube2D.delete("all")
-			self.createSide((300, 40), ySide)
-			self.createSide((300, 230), gSide)
-			self.createSide((300, 420), wSide)
-			self.createSide((110, 230), rSide)
-			self.createSide((490, 230), oSide)
-			self.createSide((680, 230), bSide)
+			self.createSide((300, 60), ySide)
+			self.createSide((300, 250), gSide)
+			self.createSide((300, 440), wSide)
+			self.createSide((110, 250), rSide)
+			self.createSide((490, 250), oSide)
+			self.createSide((680, 250), bSide)
 			self.text.config(state="normal")
 			self.text.delete(1.0,"end")
 			self.text.insert("end", self.solution[self.solutionIndex])
 			self.text.config(state="disabled")
 		else:
 			messagebox.showinfo("Finished", "You have finished solving the cube")
+			# Resets the values after the cube has been solved once
+			self.solution = []
+			self.solutionIndex = -1
 
 
 

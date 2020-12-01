@@ -62,7 +62,8 @@ class SolveCross(RubikCube):
 	# it can include longer moves for doing the same task, this function
 	# cancels those moves and shortens the solution
 	def getSolution (self):
-		sol = self.solution
+		sol = self.solution[:]
+		self.solution = []
 		return sol
 
 	# Has the solution if the white green cubicle for cross
@@ -221,30 +222,8 @@ class SolveCross(RubikCube):
 class SolveFirstTwoLayers(RubikCube):
 
 	def getSolution (self):
-		sol = self.solution
-		# Is used if the same move appears three consecutive time
-		# Turns them into one move with opposite direction
-		for i in range(2, len(sol)):
-			if sol[i]==sol[i-1] and sol[i-1]==sol[i-2]:
-				sol[i] = "X"
-				sol[i-1] = "X"
-				if "'" in sol[i]:
-					sol[i-2] = sol[i-2][:1]
-				else:
-					sol[i-2] = sol[i-2] + "'"
-		# Is used when the same move appears four times, deletes them
-		for i in range (3, len(sol)):
-			if sol[i]==sol[i-1] and sol[i-1]==sol[i-2] and sol[i-2]==sol[i-3]:
-				sol[i], sol[i-1], sol[i-2], sol[i-3] = "X", "X", "X", "X"
-
-		# Is used when a move and their opposite direction move appear
-		# consecutively, deletes them
-		for i in range(1, len(sol)):
-			if sol[i]==sol[i-1]+"'" or sol[i-1]==sol[i]+"'":
-				sol[i], sol[i-1] = "X", "X"
-		# "Deleted" moves were converted into X's before, now will be deleted
-		while "X" in sol:
-			sol.remove("X")
+		sol = self.solution[:]
+		self.solution = []
 		return sol
 
 
@@ -530,7 +509,8 @@ class SolveFirstTwoLayers(RubikCube):
 # Solves the final part of the cube
 class LastLayer(RubikCube):
 	def getSolution (self):
-		sol = self.solution
+		sol = self.solution[:]
+		self.solution = []
 		# Is used if the same move appears three consecutive time
 		# Turns them into one move with opposite direction
 		for i in range(2, len(sol)):
