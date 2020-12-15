@@ -5,6 +5,8 @@ from ImageProcessing import *
 from RubiksCube import *
 from SolvingEngine import *
 
+# This file has the GUI for this program
+
 class GUI:
 	def __init__(self, window):
 		# Has the font used in the windows
@@ -16,6 +18,7 @@ class GUI:
 		self.captureCondition = True
 		self.gSide= []
 		self.solutionIndex = -1
+		self.solvingCondition = False
 	# Creates the top portion of the window
 	def topScreen(self):
 		root = self.window
@@ -51,8 +54,12 @@ class GUI:
 		w, y, g, b, o, r = layer.getSides()
 		yellow = LastLayer(g, b, w, y, r, o, [])
 		yellow.finishLastLayer()
+		# This basically ensures that the image processing was successful
+		# or that the user entered a valid cube
+		if yellow.ySide!=["y","y","y","y","y","y","y","y","y"]:
+			self.solvingCondition = True
 		self.solution  = crossSolution+layerSolution+yellow.getSolution()
-		print (self.solution)
+
 
 
 	# Gets the colors and the solution for the cube
@@ -60,14 +67,26 @@ class GUI:
 		message = "Are you sure you want to capture again?"
 		if self.captureCondition:
 			self.imgProc.finalStep()
-			cSides = self.imgProc.getColor()
-			self.gSide, self.bSide, self.wSide = cSides[0][:], cSides[1][:], cSides[2][:]
-			self.ySide, self.rSide, self.oSide = cSides[3][:], cSides[4][:], cSides[5][:]
+			cS = self.imgProc.getColor()
+			self.gSide, self.bSide, self.wSide = cS[0][:], cS[1][:], cS[2][:]
+			self.ySide, self.rSide, self.oSide = cS[3][:], cS[4][:], cS[5][:]
 			gSide, oSide, bSide = self.gSide[:], self.oSide[:], self.bSide[:]
 			rSide, wSide, ySide = self.rSide[:], self.wSide[:], self.ySide[:]
-			self.unsolvedCube = RubikCube(gSide, bSide, wSide, ySide, rSide, oSide)
-			self.getSolution()
-			self.captureCondition = False
+			# For when the user doesn't capture a cube
+			if len(self.ySide)!=9 or len(self.bSide)!=9 or len(self.wSide)!=9:
+				messagebox.showwarning("Capture Failed", "Please try capturing again")
+			else:
+				self.getSolution()
+				# This basically ensures that the image processing was successful
+				# or that the user entered a valid cube
+				if self.solvingCondition:
+					messagebox.showwarning("Capture Failed", "Please try capturing again")
+					self.gSide = []
+					self.solvingCondition=False
+				else:
+					messagebox.showinfo("Successful", "You have captured the cube successfully!")
+					self.unsolvedCube = RubikCube(gSide, bSide, wSide, ySide, rSide, oSide)
+					self.captureCondition = False
 		elif messagebox.askyesno("Verify", message):
 			self.captureCondition=True
 			self.solution=[]
@@ -76,13 +95,14 @@ class GUI:
 
 	def getInstructions(self):
 		inst = "Step 1: Click on the first button to capture your"
-		inst+= " Rubik's Cube's color.\nStep 2: Have the side with"
+		inst+= " Rubik's Cube's colors.\nStep 2: Have the side with"
 		inst+=" the 'Faces the Camera' color as centre piece facing the"
 		inst+=" camera.\nAnd the side with the 'Faces Upwards' color as"
 		inst+=" centre piece facing upwards.\nStep 3: Repeat the process"
 		inst+=" for all six sides.\nStep 4: Click on the second button"
 		inst+=" to get the solution.\nWarning: Inconsistent lighting"
 		inst+=" conditions for capturing may result in inaccurate results."
+		inst+="\nTo exit the capturing window, please click 'p' 6 times."
 		root=self.window
 		window=tk.Toplevel(root)
 		instructionCanvas = tk.Canvas(window, height=230, width=800)
@@ -153,6 +173,7 @@ class GUI:
 		if self.gSide==[]:
 			messagebox.showwarning("Warning","You have not captured the colors yet")
 		else:
+			print(self.solution)
 			root = self.window
 			solutionWindow = tk.Toplevel(root, height=700, width=1000)
 			self.cube2D = tk.Canvas(solutionWindow, height=650, width=1000)
@@ -188,14 +209,13 @@ class GUI:
 			self.text.config(state="normal")
 			self.text.delete(1.0,"end")
 			self.text.insert("end", self.solution[self.solutionIndex])
+			self.text.insert("end", "\n"+str(self.solutionIndex+1)+"/"+str(len(self.solution)))
 			self.text.config(state="disabled")
 		else:
 			messagebox.showinfo("Finished", "You have finished solving the cube")
 			# Resets the values after the cube has been solved once
 			self.solution = []
 			self.solutionIndex = -1
-
-
 
 
 

@@ -1,5 +1,5 @@
 import cv2
-
+# This file process the colors from the live webcam
 # The image processor will start with the green side facing the camera
 # and yellow top, then move to the orange side, the blue, then red
 # Then it will capture white with green on top and then
@@ -9,7 +9,6 @@ import cv2
 class GetColors:
 	def __init__(self):
 		# Access the live video through the 0 or 1 channel
-		self.capture = cv2.VideoCapture(0)
 		self.gSide, self.oSide, self.bSide = [], [], []
 		self.rSide, self.wSide, self.ySide = [], [], []
 
@@ -45,7 +44,7 @@ class GetColors:
 		size = self.imgShow.shape
 		textF = "Faces the Camera: "+fSide
 		textU = "Faces Upwards: "+uSide
-		textKey = "Please press 'P' if finished"
+		textKey = "Press 'p' to capture the next Side"
 		font = cv2.FONT_HERSHEY_SIMPLEX
 		self.imgShow = cv2.putText(self.imgShow, textF, (0,25), font, 1, (0,0,0),2)
 		self.imgShow = cv2.putText(self.imgShow, textU, (0, 75), font, 1, (0, 0, 0), 2)
@@ -73,6 +72,7 @@ class GetColors:
 
 	def getAllColors(self):
 		self.colorList = []
+		capture = cv2.VideoCapture(0)
 		g, o, r, b, w, y = "Green", "Orange", "Red", "Blue", "White", "Yellow"
 		sidesList = [(g, y), (o, y), (b, y), (r, y), (w, g), (y, b)]
 		for i in sidesList:
@@ -80,18 +80,20 @@ class GetColors:
 			# Goes through frames (images) that make up a video
 			while condition:
 				# Gets the current frame as img for getting color
-				success, img = self.capture.read()
+				success, img = capture.read()
 				# Get another copy of the frame for showing
-				success, self.imgShow = self.capture.read()
+				success, self.imgShow = capture.read()
 				# Gets the size of the image
 				self.addRfrnce()
 				self.imgShow = cv2.flip(self.imgShow,1)
 				self.addText(i[0], i[1])
-				cv2.imshow("Window", self.imgShow)
+				cv2.imshow("Capture", self.imgShow)
 				# Press (P) to print the color
 				if cv2.waitKey(1) & 0xFF == ord("p"):
 					self.colorList.append(self.getColors(img))
 					condition = False
+		success, img = capture.read()
+		capture.release()
 		cv2.destroyAllWindows()
 		# If the user decides to capture again
 
@@ -148,10 +150,7 @@ class GetColors:
 	def getColor(self):
 		gSide, oSide, bSide = self.gSide, self.oSide, self.bSide
 		rSide, wSide, ySide = self.rSide, self.wSide, self.ySide
-		if ySide!=[]:
-			return (gSide, bSide, wSide, ySide, rSide, oSide)
-		else:
-			return False
+		return (gSide, bSide, wSide, ySide, rSide, oSide)
 
 	# Can be used for testing
 	def getSide(self, side):
@@ -186,8 +185,7 @@ class GetColors:
 cubeProcess = GetColors()
 
 
-# Takes a nested list with numbers and converts it into colors
-# def convertColors(list):
+
 
 
 

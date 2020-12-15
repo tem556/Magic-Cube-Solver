@@ -1,4 +1,7 @@
 from RubiksCube import *
+import random
+# This file has the AI for solving the Rubik's Cube
+
 
 # Helper functions, used for solving the cube
 # Function that translates the instructions for solving cube
@@ -292,7 +295,7 @@ class SolveFirstTwoLayers(RubikCube):
 
 	def casesPartFour (self, w, y, f, b, r, l):
 		fC, rC = f[4], r[4]
-		if f[1]==rC and y[7]==fC and f[2]==fC and y[8]==rC and r[0]=="w":###
+		if f[1]==rC and y[7]==fC and f[2]==fC and y[8]==rC and r[0]=="w":
 			return  ["U", "F'", "U", "U", "F", "U'", "R", "U", "R'"]
 		elif r[1]==fC and y[5]==rC and f[2]=="w" and y[8]==fC and r[0]==rC:
 			return ["U'", "R", "U", "U", "R'", "U", "F'", "U'", "F"]
@@ -670,8 +673,57 @@ class LastLayer(RubikCube):
 
 
 
+### Used for testing:
 
-
+# g="g";b="b";r="r";o="o";w="w";y="y"
+# choices = ["R",  "U",  "B", "F",  "L" ]
+# wSide = [w, w, w,
+#          w, w, w,
+#          w, w, w]
+# ySide = [y, y, y,
+#          y, y, y,
+#          y, y, y]
+# bSide = [b, b, b,
+#          b, b, b,
+#          b, b, b]
+# gSide = [g, g, g,
+#          g, g, g,
+#          g, g, g]
+# rSide = [r, r, r,
+#          r, r, r,
+#          r, r, r]
+# oSide = [o, o, o,
+#          o, o, o,
+#          o, o, o]
+# randomScramble = []
+# averageSolution = 0
+# count = 0
+# list = [[g,g,g,g,g,g,g,g,g], [b,b,b,b,b,b,b,b,b],[w,w,w,w,w,w,w,w,w],[y,y,y,y,y,y,y,y,y],[r,r,r,r,r,r,r,r,r],[o,o,o,o,o,o,o,o,o]]
+# answer = [[g,g,g,g,g,g,g,g,g], [b,b,b,b,b,b,b,b,b],[w,w,w,w,w,w,w,w,w],[y,y,y,y,y,y,y,y,y],[r,r,r,r,r,r,r,r,r],[o,o,o,o,o,o,o,o,o]]
+# while  list==answer and count<10000:
+# 	randomScramble = []
+# 	cross, layer, yellow = 0,0,0
+# 	for i in range(40):
+# 		randomScramble.append(random.choice(choices))
+# 	cross = SolveCross(gSide, bSide, wSide, ySide, rSide, oSide,[])
+# 	cross.move(randomScramble)
+# 	cross.solveAllSides()
+# 	w, y, g, b, o, r = cross.getSides()
+# 	crossSolution = cross.getSolution()
+# 	layer = SolveFirstTwoLayers(g, b, w, y, r, o, [])
+# 	layer.solveTwoLayers()
+# 	layerSolution = layer.getSolution()
+# 	w, y, g, b, o, r = layer.getSides()
+# 	yellow = LastLayer(g, b, w, y, r, o, [])
+# 	yellow.finishLastLayer()
+# 	answer[0], answer[1], answer[2]=yellow.gSide, yellow.bSide, yellow.wSide
+# 	answer[3], answer[4], answer[5] = yellow.ySide, yellow.rSide, yellow.oSide
+# 	averageSolution+=len(yellow.getSolution()+layerSolution+crossSolution)
+# 	count+=1
+# 	if count%100==0:
+# 		print (count)
+# print ("Average solution length= "+str(averageSolution//10000))
+# print (count)
 
 
 
