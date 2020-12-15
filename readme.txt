@@ -1,4 +1,4 @@
-The program take the colors from an unsolved Rubik's cube through a live webcam and walks the user
+The program takes the colors from an unsolved Rubik's cube through a live webcam and walks the user
 through the necessary moves to solve the cube using a 2-D representation of the cube.
 
 
