@@ -10,5 +10,5 @@ How to install the opencv library:
 The user has to run the following pip command in cmd(Windows) or terminal(macOS):
 pip3 install opencv-python
 
-This file has no shortcut commands. Although the user can test the solving engine by uncommenting
+This file has no shortcut commands. However, the user can test the solving engine by uncommenting
 the code written at the end and running the "SolvingEngine.py" file. 
